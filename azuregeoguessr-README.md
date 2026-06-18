@@ -8,6 +8,17 @@ Players join a room, see satellite imagery, and compete to identify locations by
 
 **[Play AzureGuessr](https://thankful-mushroom-0e3dcd710.7.azurestaticapps.net)**
 
+## What's new (FY26 culture-team build)
+
+- **Synchronized multiplayer** — the host conducts the game; everyone plays the **same location on the same round at the same time** (authoritative Firestore room state). No more players landing on different places.
+- **Player avatars** — each player gets an emoji icon shown in the lobby, scoreboards, podium, and on the map.
+- **Growing podium** — a top-3 podium appears after every round; scores accumulate across the whole game and the highest total wins.
+- **Accuracy + speed scoring** — a fast *and* close guess scores the most; results show the accuracy and speed-bonus split.
+- **Instructions + 3-2-1 countdown** — a pre-game instructions panel with a worked example, followed by a synced countdown before round 1.
+- **On-map instructions** — each round shows a short, mode-aware hint banner on the map.
+- **Upbeat between-round music** — an upbeat procedural soundtrack (toggle with the speaker button or `M`).
+- **Bigger guess map** and **mid-game join** (late joiners start at 0 and drop into the current round).
+
 ## Architecture
 
 ```
