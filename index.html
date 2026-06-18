@@ -50,6 +50,18 @@ input,select{font-family:inherit;outline:none}
 .filter-row .btn-back{background:transparent;border:1px solid #555;color:var(--text-dim)}
 #lobby{background:linear-gradient(145deg,var(--bg),var(--bg2))}
 .lobby-box{width:min(600px,92vw);text-align:center}
+.lobby-share{background:var(--card);border-radius:var(--radius);padding:1.1em 1.2em;margin-bottom:1em;border:1px solid rgba(0,120,212,.25)}
+.lobby-share-label{font-size:.78rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px;font-weight:700}
+.lobby-share-row{display:flex;gap:.6em;justify-content:center;flex-wrap:wrap;margin-top:.5em}
+.copy-btn{padding:.55em 1.1em;border-radius:8px;background:#2a2a4a;color:#fff;border:1px solid #555;font-size:.86rem;font-weight:600}
+.copy-btn:hover{border-color:var(--azure);background:#34345a}
+.copy-toast{height:1.1em;margin-top:.45em;font-size:.82rem;color:var(--green);opacity:0;transition:opacity .25s}
+.copy-toast.show{opacity:1}
+.host-settings{background:var(--card);border-radius:var(--radius);padding:1em 1.2em;margin-bottom:1em;display:flex;flex-direction:column;gap:.7em}
+.hs-row{display:flex;gap:.6em;align-items:center;justify-content:center;flex-wrap:wrap}
+.hs-row label{font-size:.78rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;font-weight:700}
+.host-settings select{padding:.55em .9em;border-radius:8px;background:#0d1117;color:#fff;border:1px solid #555;font-size:.9rem;cursor:pointer;min-width:150px}
+.host-settings select:focus{border-color:var(--azure)}
 .room-code-big{font-size:clamp(2.5rem,8vw,4rem);font-weight:900;letter-spacing:12px;color:var(--azure);cursor:pointer;user-select:all;margin:.3em 0;text-shadow:0 0 30px rgba(0,120,212,.3)}
 .lobby-info{color:var(--text-dim);margin-bottom:1em}
 .player-chips{display:flex;flex-wrap:wrap;gap:.7em;justify-content:center;margin:1.2em 0}
@@ -194,7 +206,7 @@ input,select{font-family:inherit;outline:none}
 <body>
 <div id="welcome" class="screen active"><div class="logo">Azure<span>Guessr</span></div><div class="logo-sub">v4 — The Definitive Geo Quiz 🌍</div><div class="welcome-card"><input id="nameInput" type="text" placeholder="Enter your display name..." maxlength="20" autocomplete="off"/><div class="btn-row"><button class="btn-primary" id="btnHost">🏠 Host Game</button><button class="btn-secondary" id="btnJoin">🔗 Join</button></div><div class="room-input" id="joinRoomInput"><input id="roomCodeInput" type="text" placeholder="ROOM" maxlength="4" autocomplete="off"/><button class="btn-primary" id="btnJoinRoom" style="width:100%;margin-top:.5em">Join Room</button></div><button class="btn-solo" id="btnSolo">🎮 Play Solo</button></div></div>
 <div id="modeSelect" class="screen"><h2>Choose Game Mode</h2><div class="mode-grid"><div class="mode-card" data-mode="classic"><div class="icon">📍</div><h3>Classic</h3><p>Pin on the map. 5 rounds, 60s each. Scored by distance.</p></div><div class="mode-card" data-mode="progressive"><div class="icon">🎯</div><h3>Progressive</h3><p>Continent → Country → Province → City dropdowns. 5 rounds.</p></div><div class="mode-card" data-mode="battleRoyale"><div class="icon">⚔️</div><h3>Battle Royale</h3><p>5000 HP. Distance error drains health. Last standing wins.</p></div><div class="mode-card" data-mode="streaks"><div class="icon">🔥</div><h3>Country Streaks</h3><p>Name the country fast. Points every round, streak bonus, highest total wins.</p></div><div class="mode-card" data-mode="speed"><div class="icon">⚡</div><h3>Speed Run</h3><p>10 rounds, 10s each. Fast map pin guessing.</p></div><div class="mode-card" data-mode="explorer"><div class="icon">🧭</div><h3>Explorer</h3><p>No timer. Learn about each location. Practice mode.</p></div><div class="mode-card" data-mode="mixed"><div class="icon">🎲</div><h3>Mixed Mode</h3><p>10 rounds mixing Classic, Progressive, NMPZ & Speed.</p></div></div><div class="filter-row"><select id="regionFilter"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><select id="difficultyFilter"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select><button class="btn-back" id="btnBackWelcome">← Back</button></div></div>
-<div id="lobby" class="screen"><div class="lobby-box"><h2>Game Lobby</h2><div class="room-code-big" id="lobbyRoomCode" title="Click to copy">----</div><div class="lobby-info" id="lobbyInfo">Waiting for host...</div><div class="player-chips" id="playerChips"></div><button class="lobby-btn" id="btnStartGame" style="display:none">🚀 Start Game</button><button class="lobby-btn" id="btnLeaveLobby" style="background:#2a2a4a;border:1px solid #555">Leave</button></div></div>
+<div id="lobby" class="screen"><div class="lobby-box"><h2>Game Lobby</h2><div class="lobby-share"><div class="lobby-share-label">Room code — share it so friends can join</div><div class="room-code-big" id="lobbyRoomCode" title="Click to copy">----</div><div class="lobby-share-row"><button class="copy-btn" id="btnCopyCode">📋 Copy code</button><button class="copy-btn" id="btnCopyLink">🔗 Copy invite link</button></div><div class="copy-toast" id="copyToast"></div></div><div class="host-settings" id="hostSettings" style="display:none"><div class="hs-row"><label>Mode</label><select id="lobbyMode"><option value="classic">📍 Classic</option><option value="progressive">🎯 Progressive</option><option value="battleRoyale">⚔️ Battle Royale</option><option value="streaks">🔥 Country Streaks</option><option value="speed">⚡ Speed Run</option><option value="explorer">🧭 Explorer</option><option value="mixed">🎲 Mixed Mode</option></select></div><div class="hs-row"><label>Region</label><select id="lobbyRegion"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><label>Difficulty</label><select id="lobbyDifficulty"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select></div></div><div class="lobby-info" id="lobbyInfo">Waiting for host...</div><div class="player-chips" id="playerChips"></div><button class="lobby-btn" id="btnStartGame" style="display:none">🚀 Start Game</button><button class="lobby-btn" id="btnLeaveLobby" style="background:#2a2a4a;border:1px solid #555">Leave</button></div></div>
 <div id="game" class="screen"><div class="game-wrap"><div class="hud"><div class="hud-left"><span class="hud-badge" id="hudRound">Round 1/5</span><span class="hud-badge" id="hudScore">Score: 0</span><span class="hud-badge" id="hudMode" style="display:none"></span><span class="hud-badge" id="hudPlayers" style="display:none">👥 1</span></div><div class="hud-right"><div class="timer-ring"><svg width="42" height="42"><circle class="bg" cx="21" cy="21" r="17"/><circle class="fg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="0"/></svg><div class="timer-text" id="timerText">60</div></div><button class="music-btn" id="btnMusic" title="Toggle music (M)">🔊</button></div></div><div class="health-bars" id="healthBars"></div><div class="streak-display" id="streakDisplay">🔥 <span id="streakCount">0</span></div><div class="map-area"><div class="map-instruction" id="mapInstruction"></div><div id="satMap"></div><div class="guess-map-container" id="guessMapContainer"><div class="expand-btn" id="expandGuess">⛶</div><div id="guessMap"></div><button class="submit-guess" id="btnSubmitGuess">✓ Submit Guess</button></div><div class="dropdown-panel" id="dropdownPanel"><div class="dd-group" id="ddContinent"><label>Continent</label><select id="selContinent"><option value="">—</option></select></div><div class="dd-group" id="ddCountry"><label>Country</label><select id="selCountry" disabled><option value="">—</option></select></div><div class="dd-group" id="ddProvince"><label>Province/State</label><select id="selProvince" disabled><option value="">—</option></select></div><div class="dd-group" id="ddCity"><label>City</label><select id="selCity" disabled><option value="">—</option></select></div><button class="dd-submit" id="btnSubmitDropdown">Submit ✓</button></div></div></div></div>
 <div id="results" class="screen"><div class="results-box"><h2 id="resultTitle">Round Complete!</h2><div class="result-map-wrap"><div id="resultMap"></div></div><div id="resultLocationInfo"></div><div class="result-stats" id="resultStats"></div><div id="resultPointsAnim"></div><div class="mini-podium" id="resultPodium"></div><div class="scoreboard" id="resultScoreboard"></div><div class="result-btns"><button class="btn-primary" id="btnNextRound">Next Round →</button><button class="btn-secondary" id="btnQuitGame" style="background:transparent;border:1px solid #555;color:var(--text-dim)">Quit</button></div></div></div>
 <div id="final" class="screen"><div class="final-box"><h2>🏆 Game Complete!</h2><div class="podium" id="podium"></div><div class="scoreboard" id="finalScoreboard"></div><div class="result-btns" style="margin-top:1em"><button class="btn-primary" id="btnPlayAgain">🔄 Play Again</button><button class="btn-secondary" id="btnBackMenu" style="background:transparent;border:1px solid #555;color:var(--text-dim)">🏠 Menu</button></div></div></div>
@@ -712,12 +724,30 @@ function showGameOver(type){ // solo battleRoyale elimination only
 }
 
 // ========== MULTIPLAYER (authoritative — host conducts; everyone on the same round) ==========
-async function hostGame(){G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.playerIcon=pickIcon();G.solo=false;G.isHost=true;await auth.signInAnonymously();G.playerId=auth.currentUser.uid;G.roomId=genRoomCode();await db.collection('rooms').doc(G.roomId).set({host:G.playerId,mode:null,region:'world',difficulty:'moving',state:'lobby',currentRound:0,phase:'lobby',createdAt:firebase.firestore.FieldValue.serverTimestamp()});await db.collection('rooms').doc(G.roomId).collection('players').doc(G.playerId).set({name:G.playerName,icon:G.playerIcon,score:0,roundGuesses:{},joined:firebase.firestore.FieldValue.serverTimestamp()});listenToRoom();showScreen('modeSelect')}
-async function joinGame(code){G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.playerIcon=pickIcon();G.solo=false;G.isHost=false;await auth.signInAnonymously();G.playerId=auth.currentUser.uid;G.roomId=code.toUpperCase();const roomRef=db.collection('rooms').doc(G.roomId);const roomSnap=await roomRef.get();if(!roomSnap.exists){alert('Room not found!');return}await roomRef.collection('players').doc(G.playerId).set({name:G.playerName,icon:G.playerIcon,score:0,roundGuesses:{},joined:firebase.firestore.FieldValue.serverTimestamp()});showLobby();listenToRoom()}
+async function hostGame(){G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.playerIcon=pickIcon();G.solo=false;G.isHost=true;await auth.signInAnonymously();G.playerId=auth.currentUser.uid;G.roomId=genRoomCode();
+  // default to Classic so the host can start right away (changeable in the lobby)
+  G.mode='classic';G.region='world';G.difficulty='moving';
+  await db.collection('rooms').doc(G.roomId).set({host:G.playerId,mode:G.mode,region:G.region,difficulty:G.difficulty,state:'lobby',currentRound:0,phase:'lobby',createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+  await db.collection('rooms').doc(G.roomId).collection('players').doc(G.playerId).set({name:G.playerName,icon:G.playerIcon,score:0,roundGuesses:{},joined:firebase.firestore.FieldValue.serverTimestamp()});
+  listenToRoom();showLobby()} // host goes straight to the lobby so the room code is visible to share
+async function joinGame(code){G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.playerIcon=pickIcon();G.solo=false;G.isHost=false;await auth.signInAnonymously();G.playerId=auth.currentUser.uid;G.roomId=code.toUpperCase();const roomRef=db.collection('rooms').doc(G.roomId);const roomSnap=await roomRef.get();if(!roomSnap.exists){alert('Room "'+G.roomId+'" not found. Check the code and try again.');return}await roomRef.collection('players').doc(G.playerId).set({name:G.playerName,icon:G.playerIcon,score:0,roundGuesses:{},joined:firebase.firestore.FieldValue.serverTimestamp()});showLobby();listenToRoom()}
+function lobbyToast(msg){const t=document.getElementById('copyToast');if(!t)return;t.textContent=msg;t.classList.add('show');clearTimeout(G._toastTimer);G._toastTimer=setTimeout(()=>t.classList.remove('show'),1800)}
+function inviteLink(){return location.origin+location.pathname+'?room='+G.roomId}
 function showLobby(){
-  showScreen('lobby');document.getElementById('lobbyRoomCode').textContent=G.roomId;
-  document.getElementById('lobbyInfo').textContent=(G.mode||'Waiting for host to pick a mode…')+(G.mode?(' | '+G.region+' | '+G.difficulty):'');
-  document.getElementById('btnStartGame').style.display=(G.isHost&&G.mode)?'block':'none';
+  showScreen('lobby');document.getElementById('lobbyRoomCode').textContent=G.roomId||'----';
+  const hs=document.getElementById('hostSettings');
+  if(G.isHost){
+    hs.style.display='flex';
+    document.getElementById('lobbyMode').value=G.mode||'classic';
+    document.getElementById('lobbyRegion').value=G.region||'world';
+    document.getElementById('lobbyDifficulty').value=G.difficulty||'moving';
+    document.getElementById('lobbyInfo').textContent='Share the code, then press Start when everyone has joined.';
+    document.getElementById('btnStartGame').style.display='block';
+  } else {
+    hs.style.display='none';
+    document.getElementById('lobbyInfo').textContent=G.mode?('Mode: '+G.mode+' · '+G.region+' · waiting for host to start…'):'Waiting for host to start…';
+    document.getElementById('btnStartGame').style.display='none';
+  }
   if(G.unsubPlayers)G.unsubPlayers();
   G.unsubPlayers=db.collection('rooms').doc(G.roomId).collection('players').onSnapshot(snap=>{
     const chips=document.getElementById('playerChips');chips.innerHTML='';
@@ -772,7 +802,7 @@ function listenToRoom(){
   if(G.unsubRoom)G.unsubRoom();
   G.unsubRoom=db.collection('rooms').doc(G.roomId).onSnapshot(snap=>{
     const d=snap.data();if(!d)return;
-    if(d.state==='lobby'){if(!G._gameStarted){G.mode=d.mode;G.region=d.region;G.difficulty=d.difficulty;if(document.querySelector('#lobby.active'))showLobby()}return}
+    if(d.state==='lobby'){if(!G._gameStarted){if(!G.isHost){G.mode=d.mode;G.region=d.region;G.difficulty=d.difficulty;if(document.querySelector('#lobby.active'))showLobby()}}return}
     if(d.state==='finished'){if(G.isHost){stopConductor();mpStopGuessWatch()}if(!document.querySelector('#final.active')){stopTimer();audio.stopMusic();endGame()}return}
     if(d.state!=='playing')return;
     // First entry into a playing session (start OR mid-game join)
@@ -845,6 +875,13 @@ document.getElementById('btnSolo').onclick=()=>{G.playerName=document.getElement
 document.getElementById('btnBackWelcome').onclick=()=>{mpCleanup();showScreen('welcome')};
 document.querySelectorAll('.mode-card').forEach(card=>{card.onclick=()=>{G.mode=card.dataset.mode;G.region=document.getElementById('regionFilter').value;G.difficulty=document.getElementById('difficultyFilter').value;if(G.solo){startGame()}else{db.collection('rooms').doc(G.roomId).update({mode:G.mode,region:G.region,difficulty:G.difficulty,phase:'lobby'});showLobby()}}});
 document.getElementById('btnStartGame').onclick=()=>{if(!G.isHost||!G.mode)return;hostStartGame()};
+// Lobby host settings: update the room doc when the host changes mode/region/difficulty
+function lobbyUpdateSetting(field,val){G[field]=val;if(G.isHost&&G.roomId){const u={};u[field]=val;db.collection('rooms').doc(G.roomId).update(u).catch(()=>{})}}
+document.getElementById('lobbyMode').onchange=function(){lobbyUpdateSetting('mode',this.value)};
+document.getElementById('lobbyRegion').onchange=function(){lobbyUpdateSetting('region',this.value)};
+document.getElementById('lobbyDifficulty').onchange=function(){lobbyUpdateSetting('difficulty',this.value)};
+document.getElementById('btnCopyCode').onclick=()=>{navigator.clipboard.writeText(G.roomId).then(()=>lobbyToast('Code '+G.roomId+' copied!')).catch(()=>lobbyToast('Code: '+G.roomId))};
+document.getElementById('btnCopyLink').onclick=()=>{const link=inviteLink();navigator.clipboard.writeText(link).then(()=>lobbyToast('Invite link copied!')).catch(()=>lobbyToast(link))};
 document.getElementById('btnInstrStart').onclick=()=>{if(G.solo){document.getElementById('btnInstrStart').style.display='none';runCountdown(()=>soloBeginRounds())}else if(G.isHost){document.getElementById('btnInstrStart').disabled=true;document.getElementById('btnInstrStart').textContent='Starting…';db.collection('rooms').doc(G.roomId).update({phase:'countdown'}).catch(()=>{})}};
 document.getElementById('btnLeaveLobby').onclick=()=>leaveToWelcome();
 document.getElementById('btnSubmitGuess').onclick=()=>submitMapPinGuess();
@@ -857,7 +894,7 @@ document.getElementById('btnBackMenu').onclick=()=>{mpCleanup();showScreen('welc
 document.getElementById('btnGoAgain').onclick=()=>{mpCleanup();showScreen('welcome')};
 document.getElementById('btnGoMenu').onclick=()=>{mpCleanup();showScreen('welcome')};
 document.getElementById('btnMusic').onclick=()=>{audio.init();const on=audio.toggle();document.getElementById('btnMusic').textContent=on?'\uD83D\uDD0A':'\uD83D\uDD07';if(on&&G.roundActive)audio.startMusic()};
-document.getElementById('lobbyRoomCode').onclick=()=>{navigator.clipboard.writeText(G.roomId).catch(()=>{})};
+document.getElementById('lobbyRoomCode').onclick=()=>{navigator.clipboard.writeText(G.roomId).then(()=>lobbyToast('Code '+G.roomId+' copied!')).catch(()=>{})};
 document.addEventListener('keydown',e=>{
   if(e.key==='Enter'){const active=document.querySelector('.screen.active');if(active.id==='results'){if(G.solo)nextRound()}else if(active.id==='game'&&G.guessMarker&&!G.hasGuessed)submitMapPinGuess();else if(active.id==='game'&&document.getElementById('dropdownPanel').classList.contains('visible')&&!G.hasGuessed){let em=G.mode;if(G.mode==='mixed')em=getMixedRoundType(G.currentRound);submitDropdownGuess(em)}}
   if(e.key===' '&&document.querySelector('#results.active')&&G.solo)nextRound();
@@ -868,6 +905,8 @@ document.addEventListener('keydown',e=>{
 const savedName=localStorage.getItem('azureguessr_name');if(savedName)document.getElementById('nameInput').value=savedName;
 document.getElementById('nameInput').addEventListener('blur',function(){if(this.value.trim())localStorage.setItem('azureguessr_name',this.value.trim())});
 document.addEventListener('click',()=>audio.init(),{once:true});
+// Invite link support: ?room=CODE prefills the join box so guests just enter a name and tap Join
+(function(){try{const rc=new URLSearchParams(location.search).get('room');if(rc&&/^[A-Za-z]{4}$/.test(rc)){const ri=document.getElementById('joinRoomInput');ri.classList.add('show');document.getElementById('roomCodeInput').value=rc.toUpperCase();const ni=document.getElementById('nameInput');if(!ni.value)ni.focus();else document.getElementById('roomCodeInput').focus()}}catch(e){}})();
 </script>
 </body>
 </html>
