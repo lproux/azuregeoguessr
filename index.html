@@ -74,8 +74,8 @@ input,select{font-family:inherit;outline:none}
 #game{flex-direction:row;padding:0;background:var(--bg)}
 .map-area{flex:1;display:flex;position:relative;min-height:0}
 #satMap{flex:1;z-index:1;background:#111}
-.guess-map-container{position:absolute;bottom:12px;right:12px;width:320px;height:230px;border-radius:var(--radius);overflow:hidden;border:2px solid var(--azure);z-index:50;transition:all .35s;box-shadow:0 6px 24px rgba(0,0,0,.6)}
-.guess-map-container.expanded{width:55%;height:65%;bottom:0;right:0;border-radius:0}
+.guess-map-container{position:absolute;bottom:14px;right:14px;width:min(46vw,560px);height:min(46vh,420px);border-radius:var(--radius);overflow:hidden;border:2px solid var(--azure);z-index:50;transition:all .35s;box-shadow:0 6px 24px rgba(0,0,0,.6)}
+.guess-map-container.expanded{width:72%;height:78%;bottom:0;right:0;border-radius:0}
 .guess-map-container .expand-btn{position:absolute;top:6px;left:6px;z-index:999;background:rgba(0,0,0,.75);color:#fff;border-radius:4px;padding:3px 9px;font-size:.72rem;cursor:pointer}
 #guessMap{width:100%;height:100%}
 .submit-guess{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);z-index:999;padding:.55em 1.8em;border-radius:8px;background:var(--green);color:#fff;font-weight:700;font-size:.92rem;display:none;box-shadow:0 4px 16px rgba(87,167,115,.4)}
@@ -149,18 +149,59 @@ input,select{font-family:inherit;outline:none}
 @keyframes confettiFall{0%{transform:translateY(0) rotate(0deg);opacity:1}80%{opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
 .correct-flash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2.5rem;font-weight:900;color:var(--green);opacity:0;pointer-events:none;z-index:9999;animation:correctFlash .6s ease forwards;text-shadow:0 0 20px rgba(87,167,115,.5)}
 @keyframes correctFlash{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}30%{opacity:1;transform:translate(-50%,-50%) scale(1.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(.8) translateY(-30px)}}
-@media(max-width:768px){.guess-map-container{width:100%;height:170px;bottom:0;right:0;border-radius:0;position:relative}.guess-map-container.expanded{width:100%;height:55vh}.map-area{flex-direction:column}.mode-grid{grid-template-columns:repeat(auto-fit,minmax(145px,1fr))}.podium-bar{width:75px}.hud{padding:.3em .6em;gap:.3em}.hud-badge{padding:.25em .6em;font-size:.75rem}}
+@media(max-width:768px){.guess-map-container{width:100%;height:44vh;bottom:0;right:0;border-radius:0;position:relative}.guess-map-container.expanded{width:100%;height:62vh}.map-area{flex-direction:column}.mode-grid{grid-template-columns:repeat(auto-fit,minmax(145px,1fr))}.podium-bar{width:75px}.hud{padding:.3em .6em;gap:.3em}.hud-badge{padding:.25em .6em;font-size:.75rem}.map-instruction{font-size:.74rem;padding:.5em .8em}}
+/* ===== Player icons ===== */
+.player-chip .pc-icon,.sb-icon,.podium-icon{display:inline-block}
+.sb-icon{font-size:1.15rem;margin-right:.1em}
+.podium-icon{font-size:1.7rem;line-height:1;margin-bottom:.15em}
+/* ===== Map instruction banner ===== */
+.map-instruction{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:90;background:rgba(15,15,35,.92);border:1px solid rgba(0,120,212,.45);border-radius:10px;padding:.6em 1.1em;font-size:.86rem;max-width:min(92%,640px);text-align:center;line-height:1.45;box-shadow:0 4px 18px rgba(0,0,0,.5);transition:opacity .5s;backdrop-filter:blur(6px)}
+.map-instruction strong{color:var(--azure)}
+.map-instruction.faded{opacity:.18}
+.map-instruction.faded:hover{opacity:1}
+/* ===== Instructions screen ===== */
+#instructions{background:linear-gradient(145deg,var(--bg),#0d1a3a,var(--bg2));padding:1.5em}
+.instr-card{background:var(--card);border-radius:var(--radius);padding:1.8em 2em;width:min(640px,94vw);box-shadow:0 8px 40px rgba(0,0,0,.5);max-height:90vh;overflow-y:auto}
+.instr-card h2{margin-bottom:.5em;text-align:center}
+.instr-steps{display:flex;flex-direction:column;gap:.8em;margin:1.2em 0;text-align:left}
+.instr-step{display:flex;gap:.8em;align-items:flex-start}
+.instr-step .num{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--azure);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.instr-step .txt{font-size:.92rem;line-height:1.5;color:var(--text)}
+.instr-example{background:#0d1117;border:1px solid #2a3a5a;border-radius:10px;padding:1em 1.2em;margin:1em 0;font-size:.86rem;line-height:1.6}
+.instr-example b{color:var(--yellow)}
+.instr-scoring{display:flex;gap:.6em;justify-content:center;flex-wrap:wrap;margin:.8em 0}
+.instr-pill{background:#0d1117;border:1px solid #2a3a5a;border-radius:20px;padding:.35em .9em;font-size:.78rem}
+.instr-pill b{color:var(--green)}
+/* ===== Countdown overlay ===== */
+#countdownOverlay{position:fixed;inset:0;z-index:99998;display:none;align-items:center;justify-content:center;background:rgba(8,8,20,.86);backdrop-filter:blur(4px)}
+#countdownOverlay.show{display:flex}
+.countdown-num{font-size:clamp(5rem,22vw,12rem);font-weight:900;color:#fff;text-shadow:0 0 50px rgba(0,120,212,.7);animation:cdPop .9s ease forwards}
+.countdown-num.go{color:var(--green);text-shadow:0 0 60px rgba(87,167,115,.8)}
+@keyframes cdPop{0%{opacity:0;transform:scale(.3)}25%{opacity:1;transform:scale(1.1)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.85)}}
+/* ===== Mini growing podium on results ===== */
+.mini-podium{display:flex;align-items:flex-end;justify-content:center;gap:.7em;margin:.4em 0 1em;min-height:120px}
+.mini-podium .mp-slot{display:flex;flex-direction:column;align-items:center;gap:.25em}
+.mini-podium .mp-bar{border-radius:8px 8px 0 0;width:78px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:.5em;color:#1a1a2e;transition:height .6s cubic-bezier(.34,1.4,.64,1)}
+.mini-podium .mp-bar.m1{background:linear-gradient(to top,#b8860b,#ffd93d)}
+.mini-podium .mp-bar.m2{background:linear-gradient(to top,#777,#d4d4d4)}
+.mini-podium .mp-bar.m3{background:linear-gradient(to top,#8B4513,#cd7f32)}
+.mini-podium .mp-rank{font-size:1.1rem;font-weight:900}
+.mini-podium .mp-name{font-size:.72rem;font-weight:700;max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mini-podium .mp-score{font-size:.66rem;opacity:.75;font-weight:600}
+.podium-icon-big{font-size:2.1rem;line-height:1;margin-bottom:.1em}
 </style>
 </head>
 <body>
 <div id="welcome" class="screen active"><div class="logo">Azure<span>Guessr</span></div><div class="logo-sub">v4 — The Definitive Geo Quiz 🌍</div><div class="welcome-card"><input id="nameInput" type="text" placeholder="Enter your display name..." maxlength="20" autocomplete="off"/><div class="btn-row"><button class="btn-primary" id="btnHost">🏠 Host Game</button><button class="btn-secondary" id="btnJoin">🔗 Join</button></div><div class="room-input" id="joinRoomInput"><input id="roomCodeInput" type="text" placeholder="ROOM" maxlength="4" autocomplete="off"/><button class="btn-primary" id="btnJoinRoom" style="width:100%;margin-top:.5em">Join Room</button></div><button class="btn-solo" id="btnSolo">🎮 Play Solo</button></div></div>
-<div id="modeSelect" class="screen"><h2>Choose Game Mode</h2><div class="mode-grid"><div class="mode-card" data-mode="classic"><div class="icon">📍</div><h3>Classic</h3><p>Pin on the map. 5 rounds, 60s each. Scored by distance.</p></div><div class="mode-card" data-mode="progressive"><div class="icon">🎯</div><h3>Progressive</h3><p>Continent → Country → Province → City dropdowns. 5 rounds.</p></div><div class="mode-card" data-mode="battleRoyale"><div class="icon">⚔️</div><h3>Battle Royale</h3><p>5000 HP. Distance error drains health. Last standing wins.</p></div><div class="mode-card" data-mode="streaks"><div class="icon">🔥</div><h3>Country Streaks</h3><p>Pick the country. Streak until you miss!</p></div><div class="mode-card" data-mode="speed"><div class="icon">⚡</div><h3>Speed Run</h3><p>10 rounds, 10s each. Fast map pin guessing.</p></div><div class="mode-card" data-mode="explorer"><div class="icon">🧭</div><h3>Explorer</h3><p>No timer. Learn about each location. Practice mode.</p></div><div class="mode-card" data-mode="mixed"><div class="icon">🎲</div><h3>Mixed Mode</h3><p>10 rounds mixing Classic, Progressive, NMPZ & Speed.</p></div></div><div class="filter-row"><select id="regionFilter"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><select id="difficultyFilter"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select><button class="btn-back" id="btnBackWelcome">← Back</button></div></div>
+<div id="modeSelect" class="screen"><h2>Choose Game Mode</h2><div class="mode-grid"><div class="mode-card" data-mode="classic"><div class="icon">📍</div><h3>Classic</h3><p>Pin on the map. 5 rounds, 60s each. Scored by distance.</p></div><div class="mode-card" data-mode="progressive"><div class="icon">🎯</div><h3>Progressive</h3><p>Continent → Country → Province → City dropdowns. 5 rounds.</p></div><div class="mode-card" data-mode="battleRoyale"><div class="icon">⚔️</div><h3>Battle Royale</h3><p>5000 HP. Distance error drains health. Last standing wins.</p></div><div class="mode-card" data-mode="streaks"><div class="icon">🔥</div><h3>Country Streaks</h3><p>Name the country fast. Points every round, streak bonus, highest total wins.</p></div><div class="mode-card" data-mode="speed"><div class="icon">⚡</div><h3>Speed Run</h3><p>10 rounds, 10s each. Fast map pin guessing.</p></div><div class="mode-card" data-mode="explorer"><div class="icon">🧭</div><h3>Explorer</h3><p>No timer. Learn about each location. Practice mode.</p></div><div class="mode-card" data-mode="mixed"><div class="icon">🎲</div><h3>Mixed Mode</h3><p>10 rounds mixing Classic, Progressive, NMPZ & Speed.</p></div></div><div class="filter-row"><select id="regionFilter"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><select id="difficultyFilter"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select><button class="btn-back" id="btnBackWelcome">← Back</button></div></div>
 <div id="lobby" class="screen"><div class="lobby-box"><h2>Game Lobby</h2><div class="room-code-big" id="lobbyRoomCode" title="Click to copy">----</div><div class="lobby-info" id="lobbyInfo">Waiting for host...</div><div class="player-chips" id="playerChips"></div><button class="lobby-btn" id="btnStartGame" style="display:none">🚀 Start Game</button><button class="lobby-btn" id="btnLeaveLobby" style="background:#2a2a4a;border:1px solid #555">Leave</button></div></div>
-<div id="game" class="screen"><div class="game-wrap"><div class="hud"><div class="hud-left"><span class="hud-badge" id="hudRound">Round 1/5</span><span class="hud-badge" id="hudScore">Score: 0</span><span class="hud-badge" id="hudMode" style="display:none"></span><span class="hud-badge" id="hudPlayers" style="display:none">👥 1</span></div><div class="hud-right"><div class="timer-ring"><svg width="42" height="42"><circle class="bg" cx="21" cy="21" r="17"/><circle class="fg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="0"/></svg><div class="timer-text" id="timerText">60</div></div><button class="music-btn" id="btnMusic" title="Toggle music (M)">🔊</button></div></div><div class="health-bars" id="healthBars"></div><div class="streak-display" id="streakDisplay">🔥 <span id="streakCount">0</span></div><div class="map-area"><div id="satMap"></div><div class="guess-map-container" id="guessMapContainer"><div class="expand-btn" id="expandGuess">⛶</div><div id="guessMap"></div><button class="submit-guess" id="btnSubmitGuess">✓ Submit Guess</button></div><div class="dropdown-panel" id="dropdownPanel"><div class="dd-group" id="ddContinent"><label>Continent</label><select id="selContinent"><option value="">—</option></select></div><div class="dd-group" id="ddCountry"><label>Country</label><select id="selCountry" disabled><option value="">—</option></select></div><div class="dd-group" id="ddProvince"><label>Province/State</label><select id="selProvince" disabled><option value="">—</option></select></div><div class="dd-group" id="ddCity"><label>City</label><select id="selCity" disabled><option value="">—</option></select></div><button class="dd-submit" id="btnSubmitDropdown">Submit ✓</button></div></div></div></div>
-<div id="results" class="screen"><div class="results-box"><h2 id="resultTitle">Round Complete!</h2><div class="result-map-wrap"><div id="resultMap"></div></div><div id="resultLocationInfo"></div><div class="result-stats" id="resultStats"></div><div id="resultPointsAnim"></div><div class="scoreboard" id="resultScoreboard"></div><div class="result-btns"><button class="btn-primary" id="btnNextRound">Next Round →</button><button class="btn-secondary" id="btnQuitGame" style="background:transparent;border:1px solid #555;color:var(--text-dim)">Quit</button></div></div></div>
+<div id="game" class="screen"><div class="game-wrap"><div class="hud"><div class="hud-left"><span class="hud-badge" id="hudRound">Round 1/5</span><span class="hud-badge" id="hudScore">Score: 0</span><span class="hud-badge" id="hudMode" style="display:none"></span><span class="hud-badge" id="hudPlayers" style="display:none">👥 1</span></div><div class="hud-right"><div class="timer-ring"><svg width="42" height="42"><circle class="bg" cx="21" cy="21" r="17"/><circle class="fg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="0"/></svg><div class="timer-text" id="timerText">60</div></div><button class="music-btn" id="btnMusic" title="Toggle music (M)">🔊</button></div></div><div class="health-bars" id="healthBars"></div><div class="streak-display" id="streakDisplay">🔥 <span id="streakCount">0</span></div><div class="map-area"><div class="map-instruction" id="mapInstruction"></div><div id="satMap"></div><div class="guess-map-container" id="guessMapContainer"><div class="expand-btn" id="expandGuess">⛶</div><div id="guessMap"></div><button class="submit-guess" id="btnSubmitGuess">✓ Submit Guess</button></div><div class="dropdown-panel" id="dropdownPanel"><div class="dd-group" id="ddContinent"><label>Continent</label><select id="selContinent"><option value="">—</option></select></div><div class="dd-group" id="ddCountry"><label>Country</label><select id="selCountry" disabled><option value="">—</option></select></div><div class="dd-group" id="ddProvince"><label>Province/State</label><select id="selProvince" disabled><option value="">—</option></select></div><div class="dd-group" id="ddCity"><label>City</label><select id="selCity" disabled><option value="">—</option></select></div><button class="dd-submit" id="btnSubmitDropdown">Submit ✓</button></div></div></div></div>
+<div id="results" class="screen"><div class="results-box"><h2 id="resultTitle">Round Complete!</h2><div class="result-map-wrap"><div id="resultMap"></div></div><div id="resultLocationInfo"></div><div class="result-stats" id="resultStats"></div><div id="resultPointsAnim"></div><div class="mini-podium" id="resultPodium"></div><div class="scoreboard" id="resultScoreboard"></div><div class="result-btns"><button class="btn-primary" id="btnNextRound">Next Round →</button><button class="btn-secondary" id="btnQuitGame" style="background:transparent;border:1px solid #555;color:var(--text-dim)">Quit</button></div></div></div>
 <div id="final" class="screen"><div class="final-box"><h2>🏆 Game Complete!</h2><div class="podium" id="podium"></div><div class="scoreboard" id="finalScoreboard"></div><div class="result-btns" style="margin-top:1em"><button class="btn-primary" id="btnPlayAgain">🔄 Play Again</button><button class="btn-secondary" id="btnBackMenu" style="background:transparent;border:1px solid #555;color:var(--text-dim)">🏠 Menu</button></div></div></div>
 <div id="gameOver" class="screen"><div class="gameover-box"><div class="skull-anim" id="goIcon">💀</div><h2 id="goTitle">Game Over!</h2><div class="final-streak" id="goScore">0</div><p id="goSub" style="color:var(--text-dim);margin:.6em 0"></p><div class="scoreboard" id="goScoreboard"></div><div class="result-btns" style="margin-top:1.2em"><button class="btn-primary" id="btnGoAgain">🔄 Play Again</button><button class="btn-secondary" id="btnGoMenu" style="background:transparent;border:1px solid #555;color:var(--text-dim)">🏠 Menu</button></div></div></div>
+<div id="instructions" class="screen"><div class="instr-card"><h2 id="instrTitle">How to Play 🌍</h2><div class="instr-steps" id="instrSteps"></div><div class="instr-example" id="instrExample"></div><div class="instr-scoring"><span class="instr-pill">📍 Accuracy: up to <b>5,000</b></span><span class="instr-pill">⚡ Speed bonus: up to <b>+1,000</b></span></div><p style="color:var(--text-dim);font-size:.82rem;text-align:center;margin:.4em 0">Everyone in the room sees the <strong>same location</strong> each round. Closer guess + faster answer = more points. A podium grows after every round!</p><button class="btn-primary" id="btnInstrStart" style="width:100%;margin-top:1em;padding:.9em">Got it — Start! 🚀</button></div></div>
 <div class="confetti-container" id="confettiContainer"></div>
+<div id="countdownOverlay"><div class="countdown-num" id="countdownNum">3</div></div>
 
 <script>
 // ========== FIREBASE ==========
@@ -294,20 +335,26 @@ class AudioEngine{
   playVictory(){this._osc('sine',262,0.25,0.15);this._osc('sine',330,0.25,0.15,0);this._osc('sine',392,0.25,0.15,0);this._osc('sine',523,0.5,0.2,0.35)}
   startMusic(){
     if(this.muted||!this.ctx)return;this.stopMusic();
-    const lfo=this.ctx.createOscillator(),lfoG=this.ctx.createGain();
-    lfo.type='sine';lfo.frequency.value=0.3;lfoG.gain.value=20;
-    const o1=this.ctx.createOscillator(),o2=this.ctx.createOscillator();
-    this.musicGain=this.ctx.createGain();this.musicGain.gain.value=0.06;
-    o1.type='sine';o1.frequency.value=110;o2.type='sine';o2.frequency.value=165;
-    lfo.connect(lfoG);lfoG.connect(o1.frequency);
-    o1.connect(this.musicGain);o2.connect(this.musicGain);
-    this.musicGain.connect(this.ctx.destination);
-    lfo.start();o1.start();o2.start();
-    this.musicOsc=[lfo,o1,o2];
+    const ctx=this.ctx;const session={};this.musicSession=session;
+    const master=ctx.createGain();master.gain.value=0.11;master.connect(ctx.destination);this.musicMaster=master;
+    const bpm=114,step=60/bpm/2; // eighth-note grid
+    const bass=[131,131,196,196,175,175,156,156]; // C C G G F F Eb Eb (upbeat loop)
+    const arp =[523,659,784,659,698,880,784,659]; // bright major-ish arpeggio
+    let i=0;
+    const hat=(t,open)=>{const b=ctx.createBufferSource();const len=Math.floor(ctx.sampleRate*(open?0.07:0.04));const buf=ctx.createBuffer(1,len,ctx.sampleRate);const dd=buf.getChannelData(0);for(let k=0;k<len;k++)dd[k]=(Math.random()*2-1)*Math.pow(1-k/len,open?1.5:6);b.buffer=buf;const g=ctx.createGain();g.gain.value=open?0.05:0.08;const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=7000;b.connect(hp);hp.connect(g);g.connect(master);b.start(t);b.stop(t+0.08)};
+    const note=(t,freq,dur,type,vol)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.value=freq;o.connect(g);g.connect(master);g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+0.015);g.gain.exponentialRampToValueAtTime(0.0008,t+dur);o.start(t);o.stop(t+dur+0.03)};
+    const tick=()=>{if(this.musicSession!==session||this.muted){return}const t=ctx.currentTime+0.05;const s=i%8;
+      note(t,bass[s]/2,step*0.95,'triangle',0.55); // bassline
+      note(t,arp[s],step*0.78,'square',0.14); // lead arpeggio
+      hat(t,false); hat(t+step*0.5,s%2===1); // steady + offbeat open hat
+      i++;};
+    tick();this.musicTimer=setInterval(tick,step*1000);
   }
   stopMusic(){
-    if(this.musicOsc){this.musicOsc.forEach(o=>{try{o.stop()}catch(e){}});this.musicOsc=null}
-    if(this.musicGain){try{this.musicGain.disconnect()}catch(e){}}
+    this.musicSession=null;
+    if(this.musicTimer){clearInterval(this.musicTimer);this.musicTimer=null}
+    if(this.musicMaster){const m=this.musicMaster;try{m.gain.cancelScheduledValues(this.ctx.currentTime);m.gain.setValueAtTime(Math.max(0.0001,m.gain.value),this.ctx.currentTime);m.gain.exponentialRampToValueAtTime(0.0001,this.ctx.currentTime+0.18)}catch(e){}setTimeout(()=>{try{m.disconnect()}catch(e){}},300);this.musicMaster=null}
+    this.musicOsc=null;this.musicGain=null;
   }
 }
 const audio=new AudioEngine();
@@ -333,7 +380,12 @@ function filterLocations(region){
 }
 
 // ========== GAME STATE ==========
-let G={mode:null,region:'world',difficulty:'moving',solo:true,roomId:null,playerId:null,playerName:'',isHost:false,locations:[],currentRound:0,totalRounds:5,score:0,scores:{},roundScores:{},timer:null,timeLeft:60,totalTime:60,currentLocation:null,guessMarker:null,hasGuessed:false,satMap:null,guessMap:null,resultMap:null,hp:{},streak:0,streakShield:false,unsubRoom:null,unsubPlayers:null,roundActive:false,eliminated:false};
+let G={mode:null,region:'world',difficulty:'moving',solo:true,roomId:null,playerId:null,playerName:'',playerIcon:'',isHost:false,locations:[],currentRound:0,totalRounds:5,score:0,scores:{},roundScores:{},timer:null,timeLeft:60,totalTime:60,currentLocation:null,guessMarker:null,hasGuessed:false,satMap:null,guessMap:null,resultMap:null,hp:{},streak:0,streakShield:false,unsubRoom:null,unsubPlayers:null,roundActive:false,eliminated:false,sessionId:null,activeSessionId:null,lastPts:0,lastBase:0,lastSpeed:0};
+
+// ========== PLAYER AVATARS ==========
+var AVATARS=['🦊','🐼','🦁','🐯','🐸','🦉','🐙','🦄','🐧','🦖','🐝','🦋','🐬','🦅','🐺','🦝','🐨','🦓','🦒','🐢','🦔','🐳','🦩','🐉'];
+function pickIcon(){return AVATARS[Math.floor(Math.random()*AVATARS.length)]}
+function genSessionId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 
 // ========== DROPDOWN HELPERS ==========
 const CONTINENTS=['Africa','Americas','Asia','Europe','Oceania'];
@@ -376,30 +428,86 @@ function stopTimer(){clearInterval(G.timer)}
 function getMixedRoundType(r){if(r<2)return'classic';if(r<4)return'progressive';if(r<6)return'streaks';if(r<8)return'nmpz';return'speed'}
 
 // ========== CORE GAME FLOW ==========
+function buildLocations(mode,region){
+  const pool=filterLocations(region);
+  if(pool.length<3)return null;
+  const n=(mode==='speed'||mode==='mixed')?10:(mode==='streaks'?Math.min(pool.length,40):5);
+  const arr=shuffle([...pool]).slice(0,Math.min(pool.length,n));
+  return arr.map(l=>Object.assign({},l)); // deep copy so per-game mutation never corrupts LOCATIONS
+}
+// ========== MULTIPLAYER TIMING / AUTHORITY ==========
+var MP={RESULTS_MS:9000,COUNTDOWN_MS:3500,ROUND_PAD_MS:1200};
+function totalRoundsFor(mode){return (mode==='speed'||mode==='mixed')?10:(mode==='streaks')?8:5}
+function roundSecondsFor(mode,round){
+  let em=mode,t=60;
+  if(mode==='mixed'){em=getMixedRoundType(round);if(em==='speed')t=10;else if(em==='progressive')t=30;else if(em==='streaks')t=15;else t=60}
+  else if(mode==='speed')t=10;else if(mode==='progressive')t=30;else if(mode==='streaks')t=20;
+  else if(mode==='battleRoyale')t=40;else if(mode==='explorer')t=45; // explorer capped so MP conductor can advance
+  return t;
+}
+// SOLO entry point (self-paced). Multiplayer is driven entirely by the room doc.
 function startGame(){
-  const pool=filterLocations(G.region);
-  if(pool.length<3){alert('Not enough locations for this region.');return}
-  G.locations=shuffle([...pool]).slice(0,Math.min(pool.length,G.mode==='speed'||G.mode==='mixed'?10:G.mode==='streaks'?pool.length:5));
-  G.currentRound=0;G.score=0;G.hasGuessed=false;G.eliminated=false;G.scores={};G.roundScores={};G._gameStarted=true;
+  const locs=buildLocations(G.mode,G.region);
+  if(!locs){alert('Not enough locations for this region.');return}
+  G.locations=locs;G.currentRound=0;G.score=0;G.hasGuessed=false;G.eliminated=false;G.scores={};G.roundScores={};G._gameStarted=true;
   if(G.mode==='battleRoyale'){G.hp={};G.hp[G.playerId||'solo']=5000}
   if(G.mode==='streaks'){G.streak=0;G.streakShield=false}
-  if(G.solo)G.scores[G.playerId||'solo']={name:G.playerName,score:0};
-  showScreen('game');audio.init();audio.startMusic();
-  setTimeout(()=>playRound(),300);
+  G.scores[G.playerId||'solo']={name:G.playerName,score:0};
+  showInstructions(true); // solo: button-driven
+}
+// HOST starts a multiplayer game: authors shared locations + sessionId atomically, then enters instructions phase for all.
+async function hostStartGame(){
+  if(!G.isHost||G.solo)return;
+  const locs=buildLocations(G.mode,G.region);
+  if(!locs){alert('Not enough locations for this region.');return}
+  const sid=genSessionId();G._totalRounds=totalRoundsFor(G.mode);
+  await db.collection('rooms').doc(G.roomId).update({state:'playing',sessionId:sid,mode:G.mode,region:G.region,difficulty:G.difficulty,locations:locs,currentRound:0,phase:'instructions',totalRounds:totalRoundsFor(G.mode),roundEndsAt:null,resultsEndsAt:null});
+  // listenToRoom picks up the snapshot and drives both host and guests through the phases.
+}
+function showInstructions(soloMode){
+  audio.stopMusic();showScreen('instructions');
+  const dropdown=(G.mode==='progressive'||G.mode==='streaks');
+  document.getElementById('instrTitle').textContent='How to Play — '+(G.mode?G.mode.charAt(0).toUpperCase()+G.mode.slice(1):'')+' 🌍';
+  const s=[['🛰️','Study the <strong>satellite image</strong> filling the main view. Look for road signs, architecture, vegetation and coastlines.']];
+  if(dropdown){s.push(['🧭','Use the <strong>dropdowns</strong> to pick Continent → Country'+(G.mode==='progressive'?' → Province → City':'')+'. Each correct step unlocks the next.']);}
+  else{s.push(['📍','Click the <strong>guessing map</strong> (bottom-right) to drop your pin where you think it is. Drag the pin to fine-tune.']);s.push(['✓','Press <strong>Submit Guess</strong> (or Enter) to lock it in before the timer ends.']);}
+  if(!soloMode)s.push(['👥','Everyone plays the <strong>same round at the same time</strong>. When the timer ends, you all see the results together.']);
+  s.push(['🏆','A <strong>podium</strong> appears after every round, scores add up, and the top player wins at the end.']);
+  document.getElementById('instrSteps').innerHTML=s.map((x,n)=>'<div class="instr-step"><div class="num">'+(n+1)+'</div><div class="txt">'+x[1]+'</div></div>').join('');
+  document.getElementById('instrExample').innerHTML=dropdown
+    ? '<b>Example:</b> You see red double-decker buses and Big Ben → pick <b>Europe → United Kingdom</b>. A faster correct answer earns a bigger speed bonus.'
+    : '<b>Example:</b> You see the Eiffel Tower and drop your pin on <b>Paris</b>. Pinning London (350&nbsp;km away) scores far less — and answering quickly adds up to <b>+1,000</b> speed points.';
+  const btn=document.getElementById('btnInstrStart');
+  if(soloMode){btn.style.display='block';btn.disabled=false;btn.textContent='Got it — Start! 🚀'}
+  else if(G.isHost){btn.style.display='block';btn.disabled=false;btn.textContent='Start for everyone! 🚀'}
+  else{btn.style.display='block';btn.disabled=true;btn.textContent='⏳ Waiting for host to start…'}
+}
+function runCountdown(cb){
+  const ov=document.getElementById('countdownOverlay'),num=document.getElementById('countdownNum');
+  ov.classList.add('show');const seq=['3','2','1','GO!'];let i=0;audio.init();
+  const showN=()=>{num.textContent=seq[i];num.className='countdown-num'+(seq[i]==='GO!'?' go':'');num.style.animation='none';void num.offsetWidth;num.style.animation='cdPop .9s ease forwards';
+    if(seq[i]==='GO!')audio._osc('square',880,0.28,0.18);else audio._osc('square',440+i*70,0.12,0.14);
+    i++;if(i<seq.length)setTimeout(showN,900);else setTimeout(()=>{ov.classList.remove('show');if(cb)cb()},700)};
+  showN();
+}
+// SOLO: instructions button -> countdown -> first round (advances locally via Next Round).
+function soloBeginRounds(){
+  showScreen('game');audio.init();audio.startMusic();setTimeout(()=>playRound(),120);
 }
 function playRound(){
-  if(G.currentRound>=G.locations.length&&G.mode!=='streaks'){endGame();return}
-  if(G.mode==='streaks'&&G.currentRound>=G.locations.length){const pool=filterLocations(G.region);G.locations=G.locations.concat(shuffle([...pool]).slice(0,10))}
+  if(G.currentRound>=G.locations.length){if(G.solo)endGame();return}
+  hideWaiting();
   G.currentLocation=G.locations[G.currentRound];G.hasGuessed=false;G.roundActive=true;
   let effectiveMode=G.mode,effectiveDiff=G.difficulty,timeForRound=60;
   if(G.mode==='mixed'){effectiveMode=getMixedRoundType(G.currentRound);if(effectiveMode==='nmpz')effectiveDiff='nmpz';else if(effectiveMode==='speed')timeForRound=10;else effectiveDiff='moving'}
   if(G.mode==='speed')timeForRound=10;
   if(G.mode==='progressive'||effectiveMode==='progressive')timeForRound=30;
-  if(G.mode==='explorer')timeForRound=9999;
+  if(G.mode==='explorer')timeForRound=G.solo?9999:45;
   if(G.mode==='streaks')timeForRound=20;
   if(effectiveMode==='streaks'&&G.mode==='mixed')timeForRound=15;
   if(G.mode==='battleRoyale')timeForRound=40;
-  const totalR=G.mode==='streaks'?'\u221E':(G.mode==='speed'||G.mode==='mixed'?10:5);
+  G._roundDur=timeForRound;
+  const totalR=totalRoundsFor(G.mode);
   document.getElementById('hudRound').textContent='Round '+(G.currentRound+1)+'/'+totalR;
   document.getElementById('hudScore').textContent='Score: '+G.score;
   document.getElementById('hudPlayers').style.display=G.solo?'none':'inline';
@@ -414,11 +522,23 @@ function playRound(){
   renderHealthBars();
   G.difficulty=effectiveDiff;if(effectiveMode==='nmpz')G.difficulty='nmpz';
   initSatMap();G.satMap.setView([G.currentLocation.lat,G.currentLocation.lng],G.difficulty==='nmpz'?14:13);setSatMapInteraction();
+  updateMapInstruction(useDropdown,G.mode);
   if(useMapPin){initGuessMap();document.getElementById('guessMapContainer').classList.remove('expanded')}
   if(useDropdown){setupDropdowns(effectiveMode)}
-  document.querySelector('.timer-ring').style.display=G.mode==='explorer'?'none':'flex';
+  document.querySelector('.timer-ring').style.display=(G.mode==='explorer'&&G.solo)?'none':'flex';
   startTimer(timeForRound,null,()=>submitGuessAuto(effectiveMode));
-  if(!G.solo&&G.isHost){db.collection('rooms').doc(G.roomId).update({currentRound:G.currentRound,currentLocation:{lat:G.currentLocation.lat,lng:G.currentLocation.lng,country:G.currentLocation.country,city:G.currentLocation.city,continent:G.currentLocation.continent,province:G.currentLocation.province},roundActive:true,guesses:{}})}
+}
+// "Locked in — waiting for others" overlay (multiplayer only)
+function showWaiting(msg){let el=document.getElementById('waitOverlay');if(!el){el=document.createElement('div');el.id='waitOverlay';el.style.cssText='position:absolute;inset:0;z-index:120;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,8,20,.55);backdrop-filter:blur(3px);text-align:center;padding:1em';document.querySelector('#game .game-wrap').appendChild(el)}el.innerHTML='<div style="font-size:2.4rem;margin-bottom:.3em">✓</div><div style="font-size:1.15rem;font-weight:700;color:#fff">'+(msg||'Locked in')+'</div><div style="color:#8888aa;margin-top:.3em">Waiting for the round to end…</div>';el.style.display='flex'}
+function hideWaiting(){const el=document.getElementById('waitOverlay');if(el)el.style.display='none'}
+function updateMapInstruction(useDropdown,mode){
+  const el=document.getElementById('mapInstruction');if(!el)return;
+  let t;
+  if(useDropdown)t='🧭 <strong>Identify the place</strong> from the satellite view, then pick Continent → Country'+(mode==='progressive'?' → Province → City':'')+' in the panel below. Fast correct answers score more.';
+  else if(mode==='explorer')t='🧭 <strong>Explore</strong> — no timer. Drop a pin on the world map (bottom-right) when ready.';
+  else t='📍 <strong>Drop a pin</strong> on the world map (bottom-right) where you think this is, then <strong>Submit</strong>. Closer + faster = more points.';
+  el.innerHTML=t;el.classList.remove('faded');
+  clearTimeout(G._instrTimer);G._instrTimer=setTimeout(()=>el.classList.add('faded'),6000);
 }
 function setupDropdowns(mode){
   const loc=G.currentLocation;
@@ -449,177 +569,300 @@ function setupDropdowns(mode){
   selP.onchange=()=>{if(!selP.value)return;ddProvince.classList.remove('correct','wrong');if(selP.value===loc.province){ddProvince.classList.add('correct');audio.playCorrect();selCi.disabled=false;setTimeout(()=>ddCity.classList.add('unlocked'),200)}else{ddProvince.classList.add('wrong');audio.playWrong()}};
 }
 function submitGuessAuto(effectiveMode){if(G.hasGuessed)return;const useDropdown=(effectiveMode==='progressive')||(effectiveMode==='streaks');if(useDropdown){submitDropdownGuess(effectiveMode)}else{submitMapPinGuess()}}
+// After a guess: solo reveals immediately; multiplayer locks in and waits for the host to end the round.
+function afterGuess(distance,pts,guessLat,guessLng){
+  G._pendingResult={distance:distance,pts:pts,guessLat:guessLat,guessLng:guessLng};
+  if(G.solo){showRoundResult(distance,pts,guessLat,guessLng);return}
+  showWaiting('Guess locked in! +'+pts.toLocaleString()+' pts');
+  if(G.isHost)mpMaybeEndRoundEarly();
+}
 function submitMapPinGuess(){
   if(G.hasGuessed)return;
-  if(!G.guessMarker){G.hasGuessed=true;G.roundActive=false;stopTimer();audio.stopMusic();G.score+=0;showRoundResult(20000,0,null,null);return}
-  G.hasGuessed=true;G.roundActive=false;stopTimer();audio.stopMusic();
-  let guessLat=0,guessLng=0,distance=20000;
-  if(G.guessMarker){const ll=G.guessMarker.getLatLng();guessLat=ll.lat;guessLng=ll.lng;distance=haversine(G.currentLocation.lat,G.currentLocation.lng,guessLat,guessLng)}
-  const pts=scoreFromDistance(distance);G.score+=pts;
+  const noGuess=!G.guessMarker;
+  G.hasGuessed=true;G.roundActive=false;stopTimer();
+  let guessLat=null,guessLng=null,distance=20000;
+  if(!noGuess){const ll=G.guessMarker.getLatLng();guessLat=ll.lat;guessLng=ll.lng;distance=haversine(G.currentLocation.lat,G.currentLocation.lng,guessLat,guessLng)}
+  const base=noGuess?0:scoreFromDistance(distance);
+  const timed=(G.totalTime>0&&G.totalTime<9999);
+  const timeFrac=timed?Math.max(0,G.timeLeft/G.totalTime):0;
+  const accFrac=Math.max(0,Math.min(1,base/5000));
+  const speed=(noGuess||!timed)?0:Math.round(1000*timeFrac*accFrac); // fast AND accurate earns the most
+  const pts=base+speed;
+  G.lastBase=base;G.lastSpeed=speed;G.lastPts=pts;G.score+=pts;
   if(G.mode==='battleRoyale'){const pid=G.playerId||'solo';const dmg=Math.min(2000,Math.round(distance));G.hp[pid]=Math.max(0,(G.hp[pid]||5000)-dmg);if(G.hp[pid]<=0){G.eliminated=true;audio.playElimination()}}
-  if(!G.solo){db.collection('rooms').doc(G.roomId).collection('players').doc(G.playerId).update({score:G.score,['roundGuesses.'+G.currentRound]:{lat:guessLat,lng:guessLng,distance:distance,points:pts}})}
-  showRoundResult(distance,pts,guessLat,guessLng);
+  if(pts>0)audio.playCorrect();
+  if(!G.solo){db.collection('rooms').doc(G.roomId).collection('players').doc(G.playerId).update({score:G.score,['roundGuesses.'+G.currentRound]:{lat:guessLat,lng:guessLng,distance:distance,points:pts,icon:G.playerIcon,name:G.playerName}})}
+  afterGuess(noGuess?20000:distance,pts,guessLat,guessLng);
 }
 function submitDropdownGuess(effectiveMode){
-  if(G.hasGuessed)return;G.hasGuessed=true;G.roundActive=false;stopTimer();audio.stopMusic();
-  const loc=G.currentLocation;let pts=0;const timeBonus=G.timeLeft/G.totalTime;
+  if(G.hasGuessed)return;G.hasGuessed=true;G.roundActive=false;stopTimer();
+  const loc=G.currentLocation;let base=0,speed=0;const timeBonus=Math.max(0,G.timeLeft/G.totalTime);
   if(effectiveMode==='streaks'||(G.mode==='mixed'&&getMixedRoundType(G.currentRound)==='streaks')){
     const pick=document.getElementById('selCountry').value;
-    if(pick===loc.country){G.streak++;pts=1;if(G.streak%5===0)G.streakShield=true;audio.playCorrect();showCorrectFlash();document.getElementById('streakCount').textContent=G.streak}
-    else{if(G.streakShield){G.streakShield=false;pts=1;audio.playCorrect();showCorrectFlash()}else{audio.playWrong();if(G.mode==='streaks'){showGameOver('streak');return}pts=0}}
-    G.score+=pts;
-    if(G.mode==='mixed'){showRoundResult(0,pts*500,null,null);return}
-    G.currentRound++;setTimeout(()=>playRound(),400);return;
+    if(pick===loc.country){base=1000;speed=Math.round(800*timeBonus);const sb=Math.min(G.streak*150,750);base+=sb;G.streak++;audio.playCorrect();showCorrectFlash();document.getElementById('streakCount').textContent=G.streak}
+    else{G.streak=0;audio.playWrong()}
+    document.getElementById('streakCount').textContent=G.streak;
+    const pts=base+speed;G.score+=pts;G.lastBase=base;G.lastSpeed=speed;G.lastPts=pts;
+    if(!G.solo){db.collection('rooms').doc(G.roomId).collection('players').doc(G.playerId).update({score:G.score,['roundGuesses.'+G.currentRound]:{points:pts,icon:G.playerIcon,name:G.playerName}})}
+    afterGuess(null,pts,null,null);return;
   }
   const contOk=document.getElementById('selContinent').value===loc.continent;
   const countOk=document.getElementById('selCountry').value===loc.country;
   const provOk=document.getElementById('selProvince').value===loc.province;
   const cityOk=document.getElementById('selCity').value===loc.city;
-  if(contOk){pts+=500+Math.round(250*timeBonus)}
-  if(contOk&&countOk){pts+=1000+Math.round(500*timeBonus)}
-  if(contOk&&countOk&&provOk){pts+=1500+Math.round(500*timeBonus)}
-  if(contOk&&countOk&&provOk&&cityOk){pts+=2000+Math.round(750*timeBonus)}
+  if(contOk){base+=500;speed+=Math.round(250*timeBonus)}
+  if(contOk&&countOk){base+=1000;speed+=Math.round(500*timeBonus)}
+  if(contOk&&countOk&&provOk){base+=1500;speed+=Math.round(500*timeBonus)}
+  if(contOk&&countOk&&provOk&&cityOk){base+=2000;speed+=Math.round(750*timeBonus)}
+  const pts=base+speed;
   if(pts>0)audio.playCorrect();else audio.playWrong();G.score+=pts;
-  if(!G.solo){db.collection('rooms').doc(G.roomId).collection('players').doc(G.playerId).update({score:G.score,['roundGuesses.'+G.currentRound]:{points:pts}})}
-  showRoundResult(null,pts,null,null);
+  G.lastBase=base;G.lastSpeed=speed;G.lastPts=pts;
+  if(!G.solo){db.collection('rooms').doc(G.roomId).collection('players').doc(G.playerId).update({score:G.score,['roundGuesses.'+G.currentRound]:{points:pts,icon:G.playerIcon,name:G.playerName}})}
+  afterGuess(null,pts,null,null);
 }
 
 // ========== RESULTS ==========
 function showRoundResult(distance,pts,guessLat,guessLng){
-  audio.playRoundComplete();showScreen('results');
+  hideWaiting();audio.playRoundComplete();showScreen('results');
   const loc=G.currentLocation;
   document.getElementById('resultTitle').textContent='Round '+(G.currentRound+1)+' Complete!';
   initResultMap();
   const actualIcon=L.divIcon({html:'<div style="width:14px;height:14px;background:#57a773;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(87,167,115,.5)"></div>',iconSize:[14,14],iconAnchor:[7,7],className:''});
   L.marker([loc.lat,loc.lng],{icon:actualIcon}).addTo(G.resultMap).bindPopup(loc.flag+' '+loc.city+', '+loc.country).openPopup();
   if(guessLat!==null&&guessLng!==null){
-    const guessIcon=L.divIcon({html:'<div style="width:14px;height:14px;background:#0078d4;border:3px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,120,212,.5)"></div>',iconSize:[14,14],iconAnchor:[7,7],className:''});
+    const guessIcon=L.divIcon({html:'<div style="font-size:20px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))">'+(G.playerIcon||'📍')+'</div>',iconSize:[22,22],iconAnchor:[11,11],className:''});
     L.marker([guessLat,guessLng],{icon:guessIcon}).addTo(G.resultMap);
     L.polyline([[loc.lat,loc.lng],[guessLat,guessLng]],{color:'#e74856',dashArray:'8'}).addTo(G.resultMap);
     G.resultMap.fitBounds([[loc.lat,loc.lng],[guessLat,guessLng]],{padding:[40,40]});
   }else{G.resultMap.setView([loc.lat,loc.lng],6)}
   const statsEl=document.getElementById('resultStats');statsEl.innerHTML='';
   if(distance!==null){statsEl.innerHTML+='<div class="stat-box"><div class="val">'+(distance<1?distance.toFixed(2)+'km':Math.round(distance).toLocaleString()+'km')+'</div><div class="lbl">Distance</div></div>'}
-  statsEl.innerHTML+='<div class="stat-box"><div class="val" style="color:var(--green)">'+pts.toLocaleString()+'</div><div class="lbl">Points</div></div>';
+  statsEl.innerHTML+='<div class="stat-box"><div class="val" style="color:var(--green)">'+(G.lastBase||0).toLocaleString()+'</div><div class="lbl">Accuracy</div></div>';
+  statsEl.innerHTML+='<div class="stat-box"><div class="val" style="color:var(--yellow)">+'+(G.lastSpeed||0).toLocaleString()+'</div><div class="lbl">Speed bonus</div></div>';
   statsEl.innerHTML+='<div class="stat-box"><div class="val">'+G.score.toLocaleString()+'</div><div class="lbl">Total</div></div>';
   document.getElementById('resultPointsAnim').innerHTML='<div class="points-anim">+'+pts.toLocaleString()+'</div>';
   const infoEl=document.getElementById('resultLocationInfo');
   infoEl.innerHTML='<div class="location-info"><span class="flag">'+loc.flag+'</span> <strong>'+loc.city+', '+loc.province+', '+loc.country+'</strong><br><em>'+loc.hint+'</em><br><small>'+loc.funFact+'</small></div>';
+  document.getElementById('btnNextRound').style.display=G.solo?'inline-block':'none'; // MP auto-advances via host
+  renderMiniPodium(document.getElementById('resultPodium'));
   renderScoreboard(document.getElementById('resultScoreboard'));renderHealthBars();
 }
+function podiumIconHtml(d,cls){return '<div class="'+(cls||'podium-icon')+'">'+(d&&d.icon?d.icon:'🙂')+'</div>'}
+function renderMiniPodium(el){
+  if(!el)return;
+  const draw=(players)=>{
+    const p1=players[0],p2=players[1],p3=players[2];
+    const max=Math.max(1,(p1?p1.score:0));
+    const h=(p)=>p?Math.max(34,Math.round(34+76*((p.score||0)/max))):0;
+    const slot=(p,rank,cls)=>p?('<div class="mp-slot">'+podiumIconHtml(p)+'<div class="mp-bar '+cls+'" style="height:'+h(p)+'px"><div class="mp-rank">'+rank+'</div><div class="mp-name">'+esc(p.name)+'</div><div class="mp-score">'+(p.score||0).toLocaleString()+'</div></div></div>'):'';
+    el.innerHTML=slot(p2,2,'m2')+slot(p1,1,'m1')+slot(p3,3,'m3');
+  };
+  if(G.solo){draw([{name:G.playerName,score:G.score,icon:G.playerIcon}]);return}
+  db.collection('rooms').doc(G.roomId).collection('players').orderBy('score','desc').limit(3).get().then(snap=>{
+    const players=[];snap.forEach(doc=>{const d=doc.data();players.push({name:d.name,score:d.score||0,icon:d.icon})});draw(players);
+  }).catch(()=>draw([{name:G.playerName,score:G.score,icon:G.playerIcon}]));
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function renderScoreboard(el){
-  if(G.solo){el.innerHTML='<h3>Your Score</h3><div class="sb-row me"><span class="sb-rank">1</span><span class="sb-name">'+G.playerName+'</span><span class="sb-score">'+G.score.toLocaleString()+'</span></div>';return}
+  if(G.solo){el.innerHTML='<h3>Your Score</h3><div class="sb-row me"><span class="sb-rank">1</span><span class="sb-icon">'+(G.playerIcon||'🙂')+'</span><span class="sb-name">'+esc(G.playerName)+'</span><span class="sb-score">'+G.score.toLocaleString()+'</span></div>';return}
   el.innerHTML='<h3>Scoreboard</h3><p style="color:var(--text-dim)">Loading...</p>';
   db.collection('rooms').doc(G.roomId).collection('players').orderBy('score','desc').get().then(snap=>{
     if(snap.empty){el.innerHTML='<h3>Scoreboard</h3><p style="color:var(--text-dim)">No scores yet</p>';return}
     let html='<h3>Scoreboard</h3>';let rank=0;
     snap.forEach(doc=>{rank++;const d=doc.data();const isMe=doc.id===G.playerId;
-      html+='<div class="sb-row'+(isMe?' me':'')+'"><span class="sb-rank">'+rank+'</span><span class="sb-name">'+d.name+(isMe?' (you)':'')+'</span><span class="sb-score">'+d.score.toLocaleString()+'</span></div>';
+      html+='<div class="sb-row'+(isMe?' me':'')+'"><span class="sb-rank">'+rank+'</span><span class="sb-icon">'+(d.icon||'🙂')+'</span><span class="sb-name">'+esc(d.name)+(isMe?' (you)':'')+'</span><span class="sb-score">'+(d.score||0).toLocaleString()+'</span></div>';
     });el.innerHTML=html;
-  }).catch(()=>{el.innerHTML='<h3>Scoreboard</h3><div class="sb-row me"><span class="sb-rank">1</span><span class="sb-name">'+G.playerName+'</span><span class="sb-score">'+G.score.toLocaleString()+'</span></div>'});
+  }).catch(()=>{el.innerHTML='<h3>Scoreboard</h3><div class="sb-row me"><span class="sb-rank">1</span><span class="sb-icon">'+(G.playerIcon||'🙂')+'</span><span class="sb-name">'+esc(G.playerName)+'</span><span class="sb-score">'+G.score.toLocaleString()+'</span></div>'});
 }
 function renderHealthBars(){const el=document.getElementById('healthBars');if(G.mode!=='battleRoyale'){el.innerHTML='';return}el.innerHTML='';const pid=G.playerId||'solo';const hp=G.hp[pid]||0;const pct=(hp/5000*100).toFixed(1);const cls=pct<20?'critical':pct<50?'low':'';el.innerHTML='<div class="hp-bar '+(hp<=0?'dead':'')+'"><span class="hp-name">'+G.playerName+'</span><div class="hp-track"><div class="hp-fill '+cls+'" style="width:'+pct+'%"></div></div><span>'+hp+'</span></div>'}
-function nextRound(){G.currentRound++;if(G.mode==='battleRoyale'&&G.eliminated){showGameOver('eliminated');return}showScreen('game');audio.startMusic();setTimeout(()=>playRound(),200)}
+function nextRound(){ // SOLO only
+  G.currentRound++;
+  if(G.currentRound>=G.locations.length){endGame();return}
+  showScreen('game');audio.startMusic();setTimeout(()=>playRound(),200);
+}
 function endGame(){
   audio.stopMusic();showScreen('final');audio.playVictory();spawnConfetti();
-  if(!G.solo){db.collection('rooms').doc(G.roomId).update({state:'finished',roundActive:false}).catch(()=>{})}
   const pod=document.getElementById('podium');
+  const drawFinal=(players)=>{
+    const p1=players[0],p2=players[1],p3=players[2];
+    const slot=(p,rank,cls)=>'<div class="podium-slot"><div class="podium-icon-big">'+(p&&p.icon?p.icon:'—')+'</div><div class="podium-bar '+cls+'"><div class="podium-rank">'+rank+'</div><div class="podium-name">'+(p?esc(p.name):'—')+'</div><div class="podium-score">'+(p?(p.score||0).toLocaleString():'—')+'</div></div></div>';
+    pod.innerHTML=slot(p2,2,'p2')+slot(p1,1,'p1')+slot(p3,3,'p3');
+  };
   if(!G.solo){
-    db.collection('rooms').doc(G.roomId).collection('players').orderBy('score','desc').limit(3).get().then(snap=>{
-      const players=[];snap.forEach(doc=>{const d=doc.data();players.push({name:d.name,score:d.score,isMe:doc.id===G.playerId})});
-      const p1=players[0]||{name:'-',score:'-'};const p2=players[1]||{name:'-',score:'-'};const p3=players[2]||{name:'-',score:'-'};
-      pod.innerHTML='<div class="podium-slot"><div class="podium-bar p2"><div class="podium-rank">2</div><div class="podium-name">'+p2.name+'</div><div class="podium-score">'+(typeof p2.score==='number'?p2.score.toLocaleString():p2.score)+'</div></div></div><div class="podium-slot"><div class="podium-bar p1"><div class="podium-rank">1</div><div class="podium-name">'+p1.name+'</div><div class="podium-score">'+(typeof p1.score==='number'?p1.score.toLocaleString():p1.score)+'</div></div></div><div class="podium-slot"><div class="podium-bar p3"><div class="podium-rank">3</div><div class="podium-name">'+p3.name+'</div><div class="podium-score">'+(typeof p3.score==='number'?p3.score.toLocaleString():p3.score)+'</div></div></div>';
+    db.collection('rooms').doc(G.roomId).collection('players').orderBy('score','desc').get().then(snap=>{
+      const players=[];snap.forEach(doc=>{const d=doc.data();players.push({name:d.name,score:d.score||0,icon:d.icon,isMe:doc.id===G.playerId})});
+      drawFinal(players);
+      const fb=document.getElementById('finalScoreboard');let html='';
+      if(players[0])html+='<div style="font-size:1.15rem;margin-bottom:.7em">🏆 <strong>'+(players[0].icon||'')+' '+esc(players[0].name)+(players[0].isMe?' (you)':'')+'</strong> wins with <strong>'+(players[0].score||0).toLocaleString()+'</strong>!</div>';
+      html+='<h3>Final Standings</h3>';let rank=0;
+      players.forEach(p=>{rank++;html+='<div class="sb-row'+(p.isMe?' me':'')+'"><span class="sb-rank">'+rank+'</span><span class="sb-icon">'+(p.icon||'🙂')+'</span><span class="sb-name">'+esc(p.name)+(p.isMe?' (you)':'')+'</span><span class="sb-score">'+(p.score||0).toLocaleString()+'</span></div>'});
+      fb.innerHTML=html;
     }).catch(()=>{});
-    renderScoreboard(document.getElementById('finalScoreboard'));
   } else {
-    pod.innerHTML='<div class="podium-slot"><div class="podium-bar p2"><div class="podium-rank">2</div><div class="podium-name">-</div><div class="podium-score">-</div></div></div><div class="podium-slot"><div class="podium-bar p1"><div class="podium-rank">1</div><div class="podium-name">'+G.playerName+'</div><div class="podium-score">'+G.score.toLocaleString()+'</div></div></div><div class="podium-slot"><div class="podium-bar p3"><div class="podium-rank">3</div><div class="podium-name">-</div><div class="podium-score">-</div></div></div>';
-    const sb=document.getElementById('finalScoreboard');sb.innerHTML='<h3>Final Results</h3><div class="sb-row me"><span class="sb-rank">1</span><span class="sb-name">'+G.playerName+'</span><span class="sb-score">'+G.score.toLocaleString()+'</span></div>';
+    drawFinal([{name:G.playerName,score:G.score,icon:G.playerIcon,isMe:true}]);
+    document.getElementById('finalScoreboard').innerHTML='<h3>Final Score</h3><div class="sb-row me"><span class="sb-rank">1</span><span class="sb-icon">'+(G.playerIcon||'🙂')+'</span><span class="sb-name">'+esc(G.playerName)+'</span><span class="sb-score">'+G.score.toLocaleString()+'</span></div>';
+    const key='azureguessr_'+G.mode+'_best';const prev=parseInt(localStorage.getItem(key)||'0');if(G.score>prev)localStorage.setItem(key,G.score);
   }
-  const key='azureguessr_'+G.mode+'_best';const prev=parseInt(localStorage.getItem(key)||'0');if(G.score>prev)localStorage.setItem(key,G.score);
 }
-function showGameOver(type){
+function showGameOver(type){ // solo battleRoyale elimination only
   audio.stopMusic();showScreen('gameOver');
   const icon=document.getElementById('goIcon'),title=document.getElementById('goTitle'),score=document.getElementById('goScore'),sub=document.getElementById('goSub');
-  if(type==='streak'){icon.textContent='\uD83D\uDD25';title.textContent='Streak Over!';score.textContent=G.streak;sub.textContent='You correctly identified '+G.streak+' countries in a row!';audio.playWrong();const key='azureguessr_streaks_best';const prev=parseInt(localStorage.getItem(key)||'0');if(G.streak>prev)localStorage.setItem(key,G.streak)}
-  else if(type==='eliminated'){icon.textContent='\uD83D\uDC80';title.textContent='Eliminated!';score.textContent='0 HP';sub.textContent='Better luck next time!';audio.playElimination()}
-  const goSb=document.getElementById('goScoreboard');goSb.innerHTML='<h3>Your Score</h3><div class="sb-row me"><span class="sb-rank">-</span><span class="sb-name">'+G.playerName+'</span><span class="sb-score">'+(type==='streak'?G.streak+' streak':G.score.toLocaleString())+'</span></div>';
+  icon.textContent='\uD83D\uDC80';title.textContent='Eliminated!';score.textContent='0 HP';sub.textContent='Better luck next time!';audio.playElimination();
+  document.getElementById('goScoreboard').innerHTML='<h3>Your Score</h3><div class="sb-row me"><span class="sb-rank">-</span><span class="sb-icon">'+(G.playerIcon||'🙂')+'</span><span class="sb-name">'+esc(G.playerName)+'</span><span class="sb-score">'+G.score.toLocaleString()+'</span></div>';
 }
 
-// ========== MULTIPLAYER ==========
-async function hostGame(){G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.solo=false;G.isHost=true;await auth.signInAnonymously();G.playerId=auth.currentUser.uid;G.roomId=genRoomCode();await db.collection('rooms').doc(G.roomId).set({host:G.playerId,mode:null,region:'world',difficulty:'moving',state:'lobby',currentRound:0,roundActive:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()});await db.collection('rooms').doc(G.roomId).collection('players').doc(G.playerId).set({name:G.playerName,score:0,roundGuesses:{},hp:5000,streak:0,joined:firebase.firestore.FieldValue.serverTimestamp()});showScreen('modeSelect')}
-async function joinGame(code){G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.solo=false;G.isHost=false;await auth.signInAnonymously();G.playerId=auth.currentUser.uid;G.roomId=code.toUpperCase();const roomRef=db.collection('rooms').doc(G.roomId);const roomSnap=await roomRef.get();if(!roomSnap.exists){alert('Room not found!');return}await roomRef.collection('players').doc(G.playerId).set({name:G.playerName,score:0,roundGuesses:{},hp:5000,streak:0,joined:firebase.firestore.FieldValue.serverTimestamp()});showLobby();listenToRoom()}
+// ========== MULTIPLAYER (authoritative — host conducts; everyone on the same round) ==========
+async function hostGame(){G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.playerIcon=pickIcon();G.solo=false;G.isHost=true;await auth.signInAnonymously();G.playerId=auth.currentUser.uid;G.roomId=genRoomCode();await db.collection('rooms').doc(G.roomId).set({host:G.playerId,mode:null,region:'world',difficulty:'moving',state:'lobby',currentRound:0,phase:'lobby',createdAt:firebase.firestore.FieldValue.serverTimestamp()});await db.collection('rooms').doc(G.roomId).collection('players').doc(G.playerId).set({name:G.playerName,icon:G.playerIcon,score:0,roundGuesses:{},joined:firebase.firestore.FieldValue.serverTimestamp()});listenToRoom();showScreen('modeSelect')}
+async function joinGame(code){G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.playerIcon=pickIcon();G.solo=false;G.isHost=false;await auth.signInAnonymously();G.playerId=auth.currentUser.uid;G.roomId=code.toUpperCase();const roomRef=db.collection('rooms').doc(G.roomId);const roomSnap=await roomRef.get();if(!roomSnap.exists){alert('Room not found!');return}await roomRef.collection('players').doc(G.playerId).set({name:G.playerName,icon:G.playerIcon,score:0,roundGuesses:{},joined:firebase.firestore.FieldValue.serverTimestamp()});showLobby();listenToRoom()}
 function showLobby(){
   showScreen('lobby');document.getElementById('lobbyRoomCode').textContent=G.roomId;
-  document.getElementById('lobbyInfo').textContent=(G.mode||'Waiting...')+' | '+G.region+' | '+G.difficulty;
-  document.getElementById('btnStartGame').style.display=G.isHost?'block':'none';
+  document.getElementById('lobbyInfo').textContent=(G.mode||'Waiting for host to pick a mode…')+(G.mode?(' | '+G.region+' | '+G.difficulty):'');
+  document.getElementById('btnStartGame').style.display=(G.isHost&&G.mode)?'block':'none';
   if(G.unsubPlayers)G.unsubPlayers();
   G.unsubPlayers=db.collection('rooms').doc(G.roomId).collection('players').onSnapshot(snap=>{
     const chips=document.getElementById('playerChips');chips.innerHTML='';
-    snap.forEach(doc=>{const d=doc.data();const chip=document.createElement('div');chip.className='player-chip';chip.textContent=d.name+(doc.id===G.playerId?' (you)':'');if(doc.id===G.playerId&&G.isHost)chip.classList.add('host');chips.appendChild(chip)});
+    snap.forEach(doc=>{const d=doc.data();const chip=document.createElement('div');chip.className='player-chip';chip.innerHTML='<span class="pc-icon">'+(d.icon||'🙂')+'</span> '+esc(d.name)+(doc.id===G.playerId?' (you)':'');if(doc.id===d.host)chip.classList.add('host');chips.appendChild(chip)});
     document.getElementById('hudPlayers').textContent='\uD83D\uDC65 '+snap.size;
   });
 }
+// Host conductor: count current-round guesses; advance to results once everyone has answered.
+// Uses G._watchRound (not G.currentRound) to avoid a stale-read race right after advancing.
+function mpStartGuessWatch(roundIdx){
+  if(!G.isHost||G.solo)return;mpStopGuessWatch();
+  G._watchRound=(roundIdx!=null)?roundIdx:G.currentRound;
+  G._unsubGuess=db.collection('rooms').doc(G.roomId).collection('players').onSnapshot(snap=>{
+    if(G._hostPhase!=='round')return;let total=0,answered=0;
+    snap.forEach(doc=>{total++;const d=doc.data();if(d.roundGuesses&&d.roundGuesses[String(G._watchRound)]!==undefined)answered++});
+    if(total>0&&answered>=total)mpHostToResults();
+  });
+}
+function mpStopGuessWatch(){if(G._unsubGuess){G._unsubGuess();G._unsubGuess=null}}
+function mpMaybeEndRoundEarly(){/* host's own guess also flows through the guess watcher */}
+// ---- Host conductor: a self-correcting 1s tick that compares against absolute deadlines.
+// Resilient to background-tab timer throttling (a late tick still advances by comparing Date.now()).
+function startConductor(){if(!G.isHost||G.solo)return;stopConductor();G._conductorIv=setInterval(conductorTick,1000)}
+function stopConductor(){if(G._conductorIv){clearInterval(G._conductorIv);G._conductorIv=null}}
+function conductorTick(){
+  if(!G.isHost||G.solo){stopConductor();return}
+  const now=Date.now();
+  if(G._hostPhase==='round'){
+    if(G._roundDeadline&&now>=G._roundDeadline)mpHostToResults();
+  } else if(G._hostPhase==='results'){
+    if(G._resultsDeadline&&now>=G._resultsDeadline){
+      const next=(G.currentRound||0)+1;const total=G._totalRounds||totalRoundsFor(G.mode);
+      if(next>=total){G._hostPhase='final';stopConductor();mpStopGuessWatch();db.collection('rooms').doc(G.roomId).update({state:'finished'}).catch(()=>{})}
+      else mpHostToRound(next);
+    }
+  }
+}
+function mpHostToResults(){
+  if(!G.isHost||G._hostPhase==='results')return;
+  G._hostPhase='results';G._resultsDeadline=Date.now()+MP.RESULTS_MS;
+  db.collection('rooms').doc(G.roomId).update({phase:'results',resultsEndsAt:G._resultsDeadline,roundEndsAt:null}).catch(()=>{});
+}
+function mpHostToRound(roundIdx){
+  if(!G.isHost)return;
+  const secs=roundSecondsFor(G.mode,roundIdx);
+  G.currentRound=roundIdx;G.hasGuessed=false; // set locally first so the guess-watch reads the right round
+  G._hostPhase='round';G._roundDeadline=Date.now()+secs*1000+MP.ROUND_PAD_MS;
+  mpStartGuessWatch(roundIdx);startConductor();
+  db.collection('rooms').doc(G.roomId).update({phase:'round',currentRound:roundIdx,roundEndsAt:G._roundDeadline,resultsEndsAt:null}).catch(()=>{});
+}
 function listenToRoom(){
   if(G.unsubRoom)G.unsubRoom();
-  G._lastSyncedRound=-1;
   G.unsubRoom=db.collection('rooms').doc(G.roomId).onSnapshot(snap=>{
     const d=snap.data();if(!d)return;
-    // Guest: detect game start
-    if(d.state==='playing'&&!G.isHost&&!G._gameStarted){
-      G.mode=d.mode;G.region=d.region;G.difficulty=d.difficulty;
-      if(d.currentLocation){G.currentLocation=d.currentLocation}
-      G._gameStarted=true;startGame();
+    if(d.state==='lobby'){if(!G._gameStarted){G.mode=d.mode;G.region=d.region;G.difficulty=d.difficulty;if(document.querySelector('#lobby.active'))showLobby()}return}
+    if(d.state==='finished'){if(G.isHost){stopConductor();mpStopGuessWatch()}if(!document.querySelector('#final.active')){stopTimer();audio.stopMusic();endGame()}return}
+    if(d.state!=='playing')return;
+    // First entry into a playing session (start OR mid-game join)
+    if(!G._gameStarted||G.activeSessionId!==d.sessionId){
+      G._gameStarted=true;G.activeSessionId=d.sessionId;G.sessionId=d.sessionId;
+      G.mode=d.mode;G.region=d.region;G.difficulty=d.difficulty;G.locations=d.locations||[];
+      G.currentRound=d.currentRound||0;G.streak=0;G._renderedRound=-1;G._renderedPhase=null;G._totalRounds=d.totalRounds||totalRoundsFor(d.mode);
+      if(G.mode==='battleRoyale'){G.hp={};G.hp[G.playerId]=5000}
+      const midJoin=(d.phase==='round'||d.phase==='results');
+      if(G.isHost&&d.phase==='round'){G._hostPhase='round';G._roundDeadline=d.roundEndsAt||Date.now()+5000;mpStartGuessWatch();startConductor()}
+      if(G.isHost&&d.phase==='results'){G._hostPhase='results';G._resultsDeadline=d.resultsEndsAt||Date.now()+MP.RESULTS_MS;startConductor()}
+      if(midJoin){applyRoomPhase(d)} // joiner jumps straight into the live round/results
+      else{showInstructions(false)} // fresh start: instructions first
+      return;
     }
-    // Guest: sync location for current round (pick up host's location data)
-    if(d.roundActive&&d.currentLocation&&!G.isHost&&G._gameStarted){
-      const hostRound=d.currentRound||0;
-      if(hostRound!==G._lastSyncedRound){
-        G._lastSyncedRound=hostRound;
-        // Overwrite current location with host's so both see the same place
-        if(G.locations&&G.locations[hostRound]){
-          G.locations[hostRound].lat=d.currentLocation.lat;
-          G.locations[hostRound].lng=d.currentLocation.lng;
-          G.locations[hostRound].country=d.currentLocation.country;
-          G.locations[hostRound].city=d.currentLocation.city;
-          G.locations[hostRound].continent=d.currentLocation.continent;
-          G.locations[hostRound].province=d.currentLocation.province;
-        }
-      }
-    }
-    // Guest: detect game finished by host
-    if(d.state==='finished'&&!G.isHost&&G._gameStarted){
-      stopTimer();audio.stopMusic();endGame();
-    }
-    // NOTE: Each player's timer runs independently. No force-submit on host's roundActive change.
-    // Players submit via their own timer expiry or manual submit button.
+    applyRoomPhase(d);
   });
+}
+function applyRoomPhase(d){
+  if(d.locations&&(!G.locations||!G.locations.length))G.locations=d.locations;
+  G.currentRound=(d.currentRound!=null)?d.currentRound:G.currentRound;
+  const phase=d.phase;
+  if(phase==='instructions'){if(!document.querySelector('#instructions.active'))showInstructions(false);return}
+  if(phase==='countdown'){
+    if(G._renderedPhase!=='countdown'){G._renderedPhase='countdown';
+      showScreen('instructions');document.getElementById('btnInstrStart').style.display='none';
+      runCountdown(()=>{ if(G.isHost){mpHostToRound(0)} });
+    }
+    return;
+  }
+  if(phase==='round'){
+    if(G._renderedPhase!=='round'||G._renderedRound!==G.currentRound){
+      G._renderedPhase='round';G._renderedRound=G.currentRound;
+      if(G.isHost){G._hostPhase='round'}
+      showScreen('game');audio.init();audio.startMusic();hideWaiting();
+      setTimeout(()=>{playRound();syncRoundTimer(d.roundEndsAt)},100);
+    }
+    return;
+  }
+  if(phase==='results'){
+    if(G._renderedPhase!=='results'){
+      G._renderedPhase='results';
+      if(!G.hasGuessed){stopTimer();G.hasGuessed=true;G.roundActive=false;
+        // didn't answer in time — lock a zero/no-guess so the reveal still shows
+        if(!G._pendingResult)G._pendingResult={distance:20000,pts:0,guessLat:null,guessLng:null};
+        if(!G.solo)db.collection('rooms').doc(G.roomId).collection('players').doc(G.playerId).update({['roundGuesses.'+G.currentRound]:{points:0,icon:G.playerIcon,name:G.playerName}}).catch(()=>{});
+      }
+      const pr=G._pendingResult||{distance:null,pts:0,guessLat:null,guessLng:null};
+      showRoundResult(pr.distance,pr.pts,pr.guessLat,pr.guessLng);G._pendingResult=null;
+      // Host advance is driven by the self-correcting conductor tick (see conductorTick); nothing to schedule here.
+    }
+    return;
+  }
+}
+// Sync the visual countdown ring to the host's absolute deadline (small clock skew is fine; host phase writes keep everyone together).
+function syncRoundTimer(roundEndsAt){
+  if(G.solo||!roundEndsAt)return;
+  const remain=Math.max(1,Math.round((roundEndsAt-Date.now())/1000));
+  const em=(G.mode==='mixed')?getMixedRoundType(G.currentRound):G.mode;
+  startTimer(remain,null,()=>submitGuessAuto(em));
 }
 
 // ========== EVENT BINDINGS ==========
+function mpCleanup(){stopConductor();clearTimeout(G._conductorTimer);mpStopGuessWatch();if(G.unsubPlayers){G.unsubPlayers();G.unsubPlayers=null}if(G.unsubRoom){G.unsubRoom();G.unsubRoom=null}G._gameStarted=false;G.activeSessionId=null;G._renderedPhase=null;G._hostPhase=null}
+function leaveToWelcome(){stopTimer();audio.stopMusic();hideWaiting();mpCleanup();showScreen('welcome')}
 document.getElementById('btnHost').onclick=()=>hostGame();
 document.getElementById('btnJoin').onclick=()=>{const ri=document.getElementById('joinRoomInput');ri.classList.toggle('show');if(ri.classList.contains('show'))document.getElementById('roomCodeInput').focus()};
 document.getElementById('btnJoinRoom').onclick=()=>{const code=document.getElementById('roomCodeInput').value.trim();if(code.length===4)joinGame(code)};
-document.getElementById('btnSolo').onclick=()=>{G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.solo=true;G.isHost=true;G.playerId='solo';showScreen('modeSelect')};
-document.getElementById('btnBackWelcome').onclick=()=>showScreen('welcome');
-document.querySelectorAll('.mode-card').forEach(card=>{card.onclick=()=>{G.mode=card.dataset.mode;G.region=document.getElementById('regionFilter').value;G.difficulty=document.getElementById('difficultyFilter').value;if(G.solo){startGame()}else{db.collection('rooms').doc(G.roomId).update({mode:G.mode,region:G.region,difficulty:G.difficulty});showLobby();listenToRoom()}}});
-document.getElementById('btnStartGame').onclick=()=>{if(!G.isHost)return;db.collection('rooms').doc(G.roomId).update({state:'playing'});startGame()};
-document.getElementById('btnLeaveLobby').onclick=()=>{if(G.unsubPlayers)G.unsubPlayers();if(G.unsubRoom)G.unsubRoom();showScreen('welcome')};
+document.getElementById('btnSolo').onclick=()=>{G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.playerIcon=pickIcon();G.solo=true;G.isHost=true;G.playerId='solo';showScreen('modeSelect')};
+document.getElementById('btnBackWelcome').onclick=()=>{mpCleanup();showScreen('welcome')};
+document.querySelectorAll('.mode-card').forEach(card=>{card.onclick=()=>{G.mode=card.dataset.mode;G.region=document.getElementById('regionFilter').value;G.difficulty=document.getElementById('difficultyFilter').value;if(G.solo){startGame()}else{db.collection('rooms').doc(G.roomId).update({mode:G.mode,region:G.region,difficulty:G.difficulty,phase:'lobby'});showLobby()}}});
+document.getElementById('btnStartGame').onclick=()=>{if(!G.isHost||!G.mode)return;hostStartGame()};
+document.getElementById('btnInstrStart').onclick=()=>{if(G.solo){document.getElementById('btnInstrStart').style.display='none';runCountdown(()=>soloBeginRounds())}else if(G.isHost){document.getElementById('btnInstrStart').disabled=true;document.getElementById('btnInstrStart').textContent='Starting…';db.collection('rooms').doc(G.roomId).update({phase:'countdown'}).catch(()=>{})}};
+document.getElementById('btnLeaveLobby').onclick=()=>leaveToWelcome();
 document.getElementById('btnSubmitGuess').onclick=()=>submitMapPinGuess();
-document.getElementById('btnSubmitDropdown').onclick=()=>{let effectiveMode=G.mode;if(G.mode==='mixed')effectiveMode=getMixedRoundType(G.currentRound);submitDropdownGuess(effectiveMode)};
+document.getElementById('btnSubmitDropdown').onclick=()=>{if(!document.getElementById('dropdownPanel').classList.contains('visible'))return;let effectiveMode=G.mode;if(G.mode==='mixed')effectiveMode=getMixedRoundType(G.currentRound);submitDropdownGuess(effectiveMode)};
 document.getElementById('expandGuess').onclick=()=>{const c=document.getElementById('guessMapContainer');c.classList.toggle('expanded');setTimeout(()=>{if(G.guessMap)G.guessMap.invalidateSize()},350)};
-document.getElementById('btnNextRound').onclick=()=>nextRound();
-document.getElementById('btnQuitGame').onclick=()=>{stopTimer();audio.stopMusic();showScreen('welcome')};
-document.getElementById('btnPlayAgain').onclick=()=>{showScreen('modeSelect')};
-document.getElementById('btnBackMenu').onclick=()=>{showScreen('welcome')};
-document.getElementById('btnGoAgain').onclick=()=>{showScreen('modeSelect')};
-document.getElementById('btnGoMenu').onclick=()=>{showScreen('welcome')};
+document.getElementById('btnNextRound').onclick=()=>{if(G.solo)nextRound()};
+document.getElementById('btnQuitGame').onclick=()=>leaveToWelcome();
+document.getElementById('btnPlayAgain').onclick=()=>{mpCleanup();showScreen('welcome')};
+document.getElementById('btnBackMenu').onclick=()=>{mpCleanup();showScreen('welcome')};
+document.getElementById('btnGoAgain').onclick=()=>{mpCleanup();showScreen('welcome')};
+document.getElementById('btnGoMenu').onclick=()=>{mpCleanup();showScreen('welcome')};
 document.getElementById('btnMusic').onclick=()=>{audio.init();const on=audio.toggle();document.getElementById('btnMusic').textContent=on?'\uD83D\uDD0A':'\uD83D\uDD07';if(on&&G.roundActive)audio.startMusic()};
 document.getElementById('lobbyRoomCode').onclick=()=>{navigator.clipboard.writeText(G.roomId).catch(()=>{})};
 document.addEventListener('keydown',e=>{
-  if(e.key==='Enter'){const active=document.querySelector('.screen.active');if(active.id==='results')nextRound();else if(active.id==='game'&&G.guessMarker&&!G.hasGuessed)submitMapPinGuess();else if(active.id==='game'&&document.getElementById('dropdownPanel').classList.contains('visible')&&!G.hasGuessed){let em=G.mode;if(G.mode==='mixed')em=getMixedRoundType(G.currentRound);submitDropdownGuess(em)}}
-  if(e.key===' '&&document.querySelector('#results.active'))nextRound();
+  if(e.key==='Enter'){const active=document.querySelector('.screen.active');if(active.id==='results'){if(G.solo)nextRound()}else if(active.id==='game'&&G.guessMarker&&!G.hasGuessed)submitMapPinGuess();else if(active.id==='game'&&document.getElementById('dropdownPanel').classList.contains('visible')&&!G.hasGuessed){let em=G.mode;if(G.mode==='mixed')em=getMixedRoundType(G.currentRound);submitDropdownGuess(em)}}
+  if(e.key===' '&&document.querySelector('#results.active')&&G.solo)nextRound();
   if(e.key==='m'||e.key==='M'){audio.init();var on2=audio.toggle();document.getElementById('btnMusic').textContent=on2?'\uD83D\uDD0A':'\uD83D\uDD07';if(on2&&G.roundActive)audio.startMusic()}
-  if(e.key==='Escape'){stopTimer();audio.stopMusic();showScreen('welcome')}
+  if(e.key==='Escape'){leaveToWelcome()}
   if(e.key>='1'&&e.key<='5'&&document.querySelector('#game.active')){const dp=document.getElementById('dropdownPanel');if(dp.classList.contains('visible')){const idx=parseInt(e.key)-1;const selects=[document.getElementById('selContinent'),document.getElementById('selCountry'),document.getElementById('selProvince'),document.getElementById('selCity')];for(const sel of selects){if(!sel.disabled&&sel.selectedIndex===0&&sel.options[idx+1]){sel.selectedIndex=idx+1;sel.dispatchEvent(new Event('change'));break}}}}
 });
 const savedName=localStorage.getItem('azureguessr_name');if(savedName)document.getElementById('nameInput').value=savedName;
