@@ -190,6 +190,23 @@ input,select{font-family:inherit;outline:none}
 .countdown-num{font-size:clamp(5rem,22vw,12rem);font-weight:900;color:#fff;text-shadow:0 0 50px rgba(0,120,212,.7);animation:cdPop .9s ease forwards}
 .countdown-num.go{color:var(--green);text-shadow:0 0 60px rgba(87,167,115,.8)}
 @keyframes cdPop{0%{opacity:0;transform:scale(.3)}25%{opacity:1;transform:scale(1.1)}70%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(.85)}}
+/* ===== Host toolbar + scores overlay (host-only) ===== */
+#hostToolbar{position:fixed;left:12px;bottom:12px;z-index:9000;display:none;gap:.5em}
+#hostToolbar.show{display:flex}
+.host-tool-btn{padding:.5em .85em;border-radius:8px;background:rgba(22,33,62,.95);color:#fff;border:1px solid var(--azure);font-size:.85rem;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,.5)}
+.host-tool-btn:hover{background:#1f3a6e}
+.host-tool-btn.danger{border-color:var(--red)}
+.host-tool-btn.danger:hover{background:#5a2230}
+#scoresOverlay{position:fixed;inset:0;z-index:99990;display:none;align-items:center;justify-content:center;background:rgba(8,8,20,.78);backdrop-filter:blur(4px);padding:1em}
+#scoresOverlay.show{display:flex}
+.scores-card{background:var(--card);border-radius:var(--radius);padding:1.4em 1.6em;width:min(440px,94vw);max-height:86vh;overflow-y:auto;box-shadow:0 12px 50px rgba(0,0,0,.6)}
+.scores-card h3{text-align:center;margin-bottom:.4em}
+.scores-card .sub{text-align:center;color:var(--text-dim);font-size:.8rem;margin-bottom:1em}
+.scores-actions{display:flex;gap:.7em;margin-top:1.2em}
+.scores-actions button{flex:1;padding:.7em;border-radius:8px;font-weight:700;font-size:.9rem}
+.btn-close-scores{background:var(--azure);color:#fff}
+.btn-reset-scores{background:transparent;color:var(--red);border:1px solid var(--red)}
+.btn-reset-scores:hover{background:rgba(231,72,86,.12)}
 /* ===== Mini growing podium on results ===== */
 .mini-podium{display:flex;align-items:flex-end;justify-content:center;gap:.7em;margin:.4em 0 1em;min-height:120px}
 .mini-podium .mp-slot{display:flex;flex-direction:column;align-items:center;gap:.25em}
@@ -205,8 +222,8 @@ input,select{font-family:inherit;outline:none}
 </head>
 <body>
 <div id="welcome" class="screen active"><div class="logo">Azure<span>Guessr</span></div><div class="logo-sub">v4 — The Definitive Geo Quiz 🌍</div><div class="welcome-card"><input id="nameInput" type="text" placeholder="Enter your display name..." maxlength="20" autocomplete="off"/><div class="btn-row"><button class="btn-primary" id="btnHost">🏠 Host Game</button><button class="btn-secondary" id="btnJoin">🔗 Join</button></div><div class="room-input" id="joinRoomInput"><input id="roomCodeInput" type="text" placeholder="ROOM" maxlength="4" autocomplete="off"/><button class="btn-primary" id="btnJoinRoom" style="width:100%;margin-top:.5em">Join Room</button></div><button class="btn-solo" id="btnSolo">🎮 Play Solo</button></div></div>
-<div id="modeSelect" class="screen"><h2>Choose Game Mode</h2><div class="mode-grid"><div class="mode-card" data-mode="classic"><div class="icon">📍</div><h3>Classic</h3><p>Pin on the map. 5 rounds, 60s each. Scored by distance.</p></div><div class="mode-card" data-mode="progressive"><div class="icon">🎯</div><h3>Progressive</h3><p>Continent → Country → Province → City dropdowns. 5 rounds.</p></div><div class="mode-card" data-mode="battleRoyale"><div class="icon">⚔️</div><h3>Battle Royale</h3><p>5000 HP. Distance error drains health. Last standing wins.</p></div><div class="mode-card" data-mode="streaks"><div class="icon">🔥</div><h3>Country Streaks</h3><p>Name the country fast. Points every round, streak bonus, highest total wins.</p></div><div class="mode-card" data-mode="speed"><div class="icon">⚡</div><h3>Speed Run</h3><p>10 rounds, 10s each. Fast map pin guessing.</p></div><div class="mode-card" data-mode="explorer"><div class="icon">🧭</div><h3>Explorer</h3><p>No timer. Learn about each location. Practice mode.</p></div><div class="mode-card" data-mode="mixed"><div class="icon">🎲</div><h3>Mixed Mode</h3><p>10 rounds mixing Classic, Progressive, NMPZ & Speed.</p></div></div><div class="filter-row"><select id="regionFilter"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><select id="difficultyFilter"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select><button class="btn-back" id="btnBackWelcome">← Back</button></div></div>
-<div id="lobby" class="screen"><div class="lobby-box"><h2>Game Lobby</h2><div class="lobby-share"><div class="lobby-share-label">Room code — share it so friends can join</div><div class="room-code-big" id="lobbyRoomCode" title="Click to copy">----</div><div class="lobby-share-row"><button class="copy-btn" id="btnCopyCode">📋 Copy code</button><button class="copy-btn" id="btnCopyLink">🔗 Copy invite link</button></div><div class="copy-toast" id="copyToast"></div></div><div class="host-settings" id="hostSettings" style="display:none"><div class="hs-row"><label>Mode</label><select id="lobbyMode"><option value="classic">📍 Classic</option><option value="progressive">🎯 Progressive</option><option value="battleRoyale">⚔️ Battle Royale</option><option value="streaks">🔥 Country Streaks</option><option value="speed">⚡ Speed Run</option><option value="explorer">🧭 Explorer</option><option value="mixed">🎲 Mixed Mode</option></select></div><div class="hs-row"><label>Region</label><select id="lobbyRegion"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><label>Difficulty</label><select id="lobbyDifficulty"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select></div></div><div class="lobby-info" id="lobbyInfo">Waiting for host...</div><div class="player-chips" id="playerChips"></div><button class="lobby-btn" id="btnStartGame" style="display:none">🚀 Start Game</button><button class="lobby-btn" id="btnLeaveLobby" style="background:#2a2a4a;border:1px solid #555">Leave</button></div></div>
+<div id="modeSelect" class="screen"><h2>Choose Game Mode</h2><div class="mode-grid"><div class="mode-card" data-mode="classic"><div class="icon">📍</div><h3>Classic</h3><p>Pin on the map. 5 rounds, 60s each. Scored by distance.</p></div><div class="mode-card" data-mode="progressive"><div class="icon">🎯</div><h3>Progressive</h3><p>Continent → Country → Province → City dropdowns. 5 rounds.</p></div><div class="mode-card" data-mode="battleRoyale"><div class="icon">⚔️</div><h3>Battle Royale</h3><p>5000 HP. Distance error drains health. Last standing wins.</p></div><div class="mode-card" data-mode="streaks"><div class="icon">🔥</div><h3>Country Streaks</h3><p>Name the country fast. Points every round, streak bonus, highest total wins.</p></div><div class="mode-card" data-mode="speed"><div class="icon">⚡</div><h3>Speed Run</h3><p>10 rounds, 10s each. Fast map pin guessing.</p></div><div class="mode-card" data-mode="explorer"><div class="icon">🧭</div><h3>Explorer</h3><p>No timer. Learn about each location. Practice mode.</p></div><div class="mode-card" data-mode="mixed"><div class="icon">🎲</div><h3>Mixed Mode</h3><p>10 rounds mixing Classic, Progressive, NMPZ & Speed.</p></div></div><div class="filter-row"><select id="regionFilter"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><select id="difficultyFilter"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select><select id="roundsFilter" title="Number of rounds"><option value="">Rounds: Default</option><option value="3">3 rounds</option><option value="5">5 rounds</option><option value="7">7 rounds</option><option value="10">10 rounds</option><option value="15">15 rounds</option><option value="20">20 rounds</option></select><button class="btn-back" id="btnBackWelcome">← Back</button></div></div>
+<div id="lobby" class="screen"><div class="lobby-box"><h2>Game Lobby</h2><div class="lobby-share"><div class="lobby-share-label">Room code — share it so friends can join</div><div class="room-code-big" id="lobbyRoomCode" title="Click to copy">----</div><div class="lobby-share-row"><button class="copy-btn" id="btnCopyCode">📋 Copy code</button><button class="copy-btn" id="btnCopyLink">🔗 Copy invite link</button></div><div class="copy-toast" id="copyToast"></div></div><div class="host-settings" id="hostSettings" style="display:none"><div class="hs-row"><label>Mode</label><select id="lobbyMode"><option value="classic">📍 Classic</option><option value="progressive">🎯 Progressive</option><option value="battleRoyale">⚔️ Battle Royale</option><option value="streaks">🔥 Country Streaks</option><option value="speed">⚡ Speed Run</option><option value="explorer">🧭 Explorer</option><option value="mixed">🎲 Mixed Mode</option></select></div><div class="hs-row"><label>Region</label><select id="lobbyRegion"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><label>Difficulty</label><select id="lobbyDifficulty"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select><label>Rounds</label><select id="lobbyRounds"><option value="">Default</option><option value="3">3</option><option value="5">5</option><option value="7">7</option><option value="10">10</option><option value="15">15</option><option value="20">20</option></select></div></div><div class="lobby-info" id="lobbyInfo">Waiting for host...</div><div class="player-chips" id="playerChips"></div><button class="lobby-btn" id="btnStartGame" style="display:none">🚀 Start Game</button><button class="lobby-btn" id="btnLeaveLobby" style="background:#2a2a4a;border:1px solid #555">Leave</button></div></div>
 <div id="game" class="screen"><div class="game-wrap"><div class="hud"><div class="hud-left"><span class="hud-badge" id="hudRound">Round 1/5</span><span class="hud-badge" id="hudScore">Score: 0</span><span class="hud-badge" id="hudMode" style="display:none"></span><span class="hud-badge" id="hudPlayers" style="display:none">👥 1</span></div><div class="hud-right"><div class="timer-ring"><svg width="42" height="42"><circle class="bg" cx="21" cy="21" r="17"/><circle class="fg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="0"/></svg><div class="timer-text" id="timerText">60</div></div><button class="music-btn" id="btnMusic" title="Toggle music (M)">🔊</button></div></div><div class="health-bars" id="healthBars"></div><div class="streak-display" id="streakDisplay">🔥 <span id="streakCount">0</span></div><div class="map-area"><div class="map-instruction" id="mapInstruction"></div><div id="satMap"></div><div class="guess-map-container" id="guessMapContainer"><div class="expand-btn" id="expandGuess">⛶</div><div id="guessMap"></div><button class="submit-guess" id="btnSubmitGuess">✓ Submit Guess</button></div><div class="dropdown-panel" id="dropdownPanel"><div class="dd-group" id="ddContinent"><label>Continent</label><select id="selContinent"><option value="">—</option></select></div><div class="dd-group" id="ddCountry"><label>Country</label><select id="selCountry" disabled><option value="">—</option></select></div><div class="dd-group" id="ddProvince"><label>Province/State</label><select id="selProvince" disabled><option value="">—</option></select></div><div class="dd-group" id="ddCity"><label>City</label><select id="selCity" disabled><option value="">—</option></select></div><button class="dd-submit" id="btnSubmitDropdown">Submit ✓</button></div></div></div></div>
 <div id="results" class="screen"><div class="results-box"><h2 id="resultTitle">Round Complete!</h2><div class="result-map-wrap"><div id="resultMap"></div></div><div id="resultLocationInfo"></div><div class="result-stats" id="resultStats"></div><div id="resultPointsAnim"></div><div class="mini-podium" id="resultPodium"></div><div class="scoreboard" id="resultScoreboard"></div><div class="result-btns"><button class="btn-primary" id="btnNextRound">Next Round →</button><button class="btn-secondary" id="btnQuitGame" style="background:transparent;border:1px solid #555;color:var(--text-dim)">Quit</button></div></div></div>
 <div id="final" class="screen"><div class="final-box"><h2>🏆 Game Complete!</h2><div class="podium" id="podium"></div><div class="scoreboard" id="finalScoreboard"></div><div class="result-btns" style="margin-top:1em"><button class="btn-primary" id="btnPlayAgain">🔄 Play Again</button><button class="btn-secondary" id="btnBackMenu" style="background:transparent;border:1px solid #555;color:var(--text-dim)">🏠 Menu</button></div></div></div>
@@ -214,6 +231,8 @@ input,select{font-family:inherit;outline:none}
 <div id="instructions" class="screen"><div class="instr-card"><h2 id="instrTitle">How to Play 🌍</h2><div class="instr-steps" id="instrSteps"></div><div class="instr-example" id="instrExample"></div><div class="instr-scoring"><span class="instr-pill">📍 Accuracy: up to <b>5,000</b></span><span class="instr-pill">⚡ Speed bonus: up to <b>+1,000</b></span></div><p style="color:var(--text-dim);font-size:.82rem;text-align:center;margin:.4em 0">Everyone in the room sees the <strong>same location</strong> each round. Closer guess + faster answer = more points. A podium grows after every round!</p><button class="btn-primary" id="btnInstrStart" style="width:100%;margin-top:1em;padding:.9em">Got it — Start! 🚀</button></div></div>
 <div class="confetti-container" id="confettiContainer"></div>
 <div id="countdownOverlay"><div class="countdown-num" id="countdownNum">3</div></div>
+<div id="hostToolbar"><button class="host-tool-btn" id="btnHostScores">📊 Scores</button><button class="host-tool-btn danger" id="btnHostReset">♻️ Reset</button></div>
+<div id="scoresOverlay"><div class="scores-card"><h3>🏆 Live Scores</h3><div class="sub">Host controls — visible to you only</div><div class="scoreboard" id="scoresOverlayBoard"></div><div class="scores-actions"><button class="btn-close-scores" id="btnScoresClose">Close</button><button class="btn-reset-scores" id="btnScoresReset">♻️ Reset all scores</button></div></div></div>
 
 <script>
 // ========== FIREBASE ==========
@@ -440,16 +459,19 @@ function stopTimer(){clearInterval(G.timer)}
 function getMixedRoundType(r){if(r<2)return'classic';if(r<4)return'progressive';if(r<6)return'streaks';if(r<8)return'nmpz';return'speed'}
 
 // ========== CORE GAME FLOW ==========
-function buildLocations(mode,region){
+function buildLocations(mode,region,rounds){
   const pool=filterLocations(region);
   if(pool.length<3)return null;
-  const n=(mode==='speed'||mode==='mixed')?10:(mode==='streaks'?Math.min(pool.length,40):5);
-  const arr=shuffle([...pool]).slice(0,Math.min(pool.length,n));
+  const want=rounds||totalRoundsFor(mode);
+  const n=Math.min(pool.length,want);
+  const arr=shuffle([...pool]).slice(0,n);
   return arr.map(l=>Object.assign({},l)); // deep copy so per-game mutation never corrupts LOCATIONS
 }
 // ========== MULTIPLAYER TIMING / AUTHORITY ==========
 var MP={RESULTS_MS:9000,COUNTDOWN_MS:3500,ROUND_PAD_MS:1200};
 function totalRoundsFor(mode){return (mode==='speed'||mode==='mixed')?10:(mode==='streaks')?8:5}
+// Round count the player chose for this game (falls back to the mode default).
+function chosenRounds(mode){return (G.numRounds&&G.numRounds>0)?G.numRounds:totalRoundsFor(mode)}
 function roundSecondsFor(mode,round){
   let em=mode,t=60;
   if(mode==='mixed'){em=getMixedRoundType(round);if(em==='speed')t=10;else if(em==='progressive')t=30;else if(em==='streaks')t=15;else t=60}
@@ -459,9 +481,9 @@ function roundSecondsFor(mode,round){
 }
 // SOLO entry point (self-paced). Multiplayer is driven entirely by the room doc.
 function startGame(){
-  const locs=buildLocations(G.mode,G.region);
+  const locs=buildLocations(G.mode,G.region,chosenRounds(G.mode));
   if(!locs){alert('Not enough locations for this region.');return}
-  G.locations=locs;G.currentRound=0;G.score=0;G.hasGuessed=false;G.eliminated=false;G.scores={};G.roundScores={};G._gameStarted=true;
+  G.locations=locs;G._totalRounds=locs.length;G.currentRound=0;G.score=0;G.hasGuessed=false;G.eliminated=false;G.scores={};G.roundScores={};G._gameStarted=true;
   if(G.mode==='battleRoyale'){G.hp={};G.hp[G.playerId||'solo']=5000}
   if(G.mode==='streaks'){G.streak=0;G.streakShield=false}
   G.scores[G.playerId||'solo']={name:G.playerName,score:0};
@@ -470,14 +492,14 @@ function startGame(){
 // HOST starts a multiplayer game: authors shared locations + sessionId atomically, then enters instructions phase for all.
 async function hostStartGame(){
   if(!G.isHost||G.solo)return;
-  const locs=buildLocations(G.mode,G.region);
+  const locs=buildLocations(G.mode,G.region,chosenRounds(G.mode));
   if(!locs){alert('Not enough locations for this region.');return}
-  const sid=genSessionId();G._totalRounds=totalRoundsFor(G.mode);
-  await db.collection('rooms').doc(G.roomId).update({state:'playing',sessionId:sid,mode:G.mode,region:G.region,difficulty:G.difficulty,locations:locs,currentRound:0,phase:'instructions',totalRounds:totalRoundsFor(G.mode),roundEndsAt:null,resultsEndsAt:null});
+  const sid=genSessionId();G._totalRounds=locs.length;
+  await db.collection('rooms').doc(G.roomId).update({state:'playing',sessionId:sid,mode:G.mode,region:G.region,difficulty:G.difficulty,locations:locs,currentRound:0,phase:'instructions',totalRounds:locs.length,roundEndsAt:null,resultsEndsAt:null});
   // listenToRoom picks up the snapshot and drives both host and guests through the phases.
 }
 function showInstructions(soloMode){
-  audio.stopMusic();showScreen('instructions');
+  audio.stopMusic();showScreen('instructions');updateHostToolbar();
   const dropdown=(G.mode==='progressive'||G.mode==='streaks');
   document.getElementById('instrTitle').textContent='How to Play — '+(G.mode?G.mode.charAt(0).toUpperCase()+G.mode.slice(1):'')+' 🌍';
   const s=[['🛰️','Study the <strong>satellite image</strong> filling the main view. Look for road signs, architecture, vegetation and coastlines.']];
@@ -519,7 +541,7 @@ function playRound(){
   if(effectiveMode==='streaks'&&G.mode==='mixed')timeForRound=15;
   if(G.mode==='battleRoyale')timeForRound=40;
   G._roundDur=timeForRound;
-  const totalR=totalRoundsFor(G.mode);
+  const totalR=G._totalRounds||totalRoundsFor(G.mode);
   document.getElementById('hudRound').textContent='Round '+(G.currentRound+1)+'/'+totalR;
   document.getElementById('hudScore').textContent='Score: '+G.score;
   document.getElementById('hudPlayers').style.display=G.solo?'none':'inline';
@@ -556,6 +578,8 @@ function setupDropdowns(mode){
   const loc=G.currentLocation;
   const ddContinent=document.getElementById('ddContinent'),ddCountry=document.getElementById('ddCountry'),ddProvince=document.getElementById('ddProvince'),ddCity=document.getElementById('ddCity');
   [ddContinent,ddCountry,ddProvince,ddCity].forEach(d=>{d.classList.remove('unlocked','correct','wrong')});
+  // clear any stale onchange handlers from a previous round/mode (fixes streaks showing red on a correct pick)
+  document.getElementById('selContinent').onchange=null;document.getElementById('selCountry').onchange=null;document.getElementById('selProvince').onchange=null;document.getElementById('selCity').onchange=null;
   document.getElementById('selCountry').disabled=true;document.getElementById('selProvince').disabled=true;document.getElementById('selCity').disabled=true;
   const filteredPool=filterLocations(G.region);
   if(mode==='streaks'){
@@ -741,6 +765,7 @@ function showLobby(){
     document.getElementById('lobbyMode').value=G.mode||'classic';
     document.getElementById('lobbyRegion').value=G.region||'world';
     document.getElementById('lobbyDifficulty').value=G.difficulty||'moving';
+    document.getElementById('lobbyRounds').value=G.numRounds?String(G.numRounds):'';
     document.getElementById('lobbyInfo').textContent='Share the code, then press Start when everyone has joined.';
     document.getElementById('btnStartGame').style.display='block';
   } else {
@@ -824,6 +849,7 @@ function listenToRoom(){
 function applyRoomPhase(d){
   if(d.locations&&(!G.locations||!G.locations.length))G.locations=d.locations;
   G.currentRound=(d.currentRound!=null)?d.currentRound:G.currentRound;
+  updateHostToolbar();
   const phase=d.phase;
   if(phase==='instructions'){if(!document.querySelector('#instructions.active'))showInstructions(false);return}
   if(phase==='countdown'){
@@ -866,20 +892,46 @@ function syncRoundTimer(roundEndsAt){
 }
 
 // ========== EVENT BINDINGS ==========
-function mpCleanup(){stopConductor();clearTimeout(G._conductorTimer);mpStopGuessWatch();if(G.unsubPlayers){G.unsubPlayers();G.unsubPlayers=null}if(G.unsubRoom){G.unsubRoom();G.unsubRoom=null}G._gameStarted=false;G.activeSessionId=null;G._renderedPhase=null;G._hostPhase=null}
+// Host-only toolbar (view live scores / reset scores) — shown whenever a multiplayer game is active.
+function updateHostToolbar(){const tb=document.getElementById('hostToolbar');if(!tb)return;if(G.isHost&&!G.solo&&G._gameStarted)tb.classList.add('show');else tb.classList.remove('show')}
+function renderScoresOverlay(){const el=document.getElementById('scoresOverlayBoard');if(!el)return;
+  db.collection('rooms').doc(G.roomId).collection('players').orderBy('score','desc').get().then(snap=>{
+    if(snap.empty){el.innerHTML='<p style="color:var(--text-dim);text-align:center">No players yet</p>';return}
+    let html='';let rank=0;snap.forEach(doc=>{rank++;const d=doc.data();const isMe=doc.id===G.playerId;
+      html+='<div class="sb-row'+(isMe?' me':'')+'"><span class="sb-rank">'+rank+'</span><span class="sb-icon">'+(d.icon||'🙂')+'</span><span class="sb-name">'+esc(d.name)+(isMe?' (you)':'')+'</span><span class="sb-score">'+(d.score||0).toLocaleString()+'</span></div>'});
+    el.innerHTML=html;
+  }).catch(()=>{el.innerHTML='<p style="color:var(--text-dim);text-align:center">Could not load scores</p>'});
+}
+function openScores(){if(!G.isHost||G.solo)return;document.getElementById('scoresOverlay').classList.add('show');renderScoresOverlay();
+  if(G._unsubScores)G._unsubScores();
+  G._unsubScores=db.collection('rooms').doc(G.roomId).collection('players').onSnapshot(()=>{if(document.getElementById('scoresOverlay').classList.contains('show'))renderScoresOverlay()});
+}
+function closeScores(){document.getElementById('scoresOverlay').classList.remove('show');if(G._unsubScores){G._unsubScores();G._unsubScores=null}}
+async function resetScores(){if(!G.isHost||G.solo)return;
+  if(!confirm('Reset ALL player scores to 0? This cannot be undone.'))return;
+  try{const snap=await db.collection('rooms').doc(G.roomId).collection('players').get();const batch=db.batch();snap.forEach(doc=>batch.update(doc.ref,{score:0,roundGuesses:{}}));await batch.commit();G.score=0;
+    const hs=document.getElementById('hudScore');if(hs)hs.textContent='Score: 0';renderScoresOverlay();lobbyToast&&null;
+  }catch(e){alert('Could not reset scores.')}
+}
+function mpCleanup(){stopConductor();clearTimeout(G._conductorTimer);mpStopGuessWatch();if(G.unsubPlayers){G.unsubPlayers();G.unsubPlayers=null}if(G.unsubRoom){G.unsubRoom();G.unsubRoom=null}if(G._unsubScores){G._unsubScores();G._unsubScores=null}closeScores();G._gameStarted=false;G.activeSessionId=null;G._renderedPhase=null;G._hostPhase=null;updateHostToolbar()}
 function leaveToWelcome(){stopTimer();audio.stopMusic();hideWaiting();mpCleanup();showScreen('welcome')}
+document.getElementById('btnHostScores').onclick=()=>openScores();
+document.getElementById('btnHostReset').onclick=()=>resetScores();
+document.getElementById('btnScoresClose').onclick=()=>closeScores();
+document.getElementById('btnScoresReset').onclick=()=>resetScores();
 document.getElementById('btnHost').onclick=()=>hostGame();
 document.getElementById('btnJoin').onclick=()=>{const ri=document.getElementById('joinRoomInput');ri.classList.toggle('show');if(ri.classList.contains('show'))document.getElementById('roomCodeInput').focus()};
 document.getElementById('btnJoinRoom').onclick=()=>{const code=document.getElementById('roomCodeInput').value.trim();if(code.length===4)joinGame(code)};
 document.getElementById('btnSolo').onclick=()=>{G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.playerIcon=pickIcon();G.solo=true;G.isHost=true;G.playerId='solo';showScreen('modeSelect')};
 document.getElementById('btnBackWelcome').onclick=()=>{mpCleanup();showScreen('welcome')};
-document.querySelectorAll('.mode-card').forEach(card=>{card.onclick=()=>{G.mode=card.dataset.mode;G.region=document.getElementById('regionFilter').value;G.difficulty=document.getElementById('difficultyFilter').value;if(G.solo){startGame()}else{db.collection('rooms').doc(G.roomId).update({mode:G.mode,region:G.region,difficulty:G.difficulty,phase:'lobby'});showLobby()}}});
+document.querySelectorAll('.mode-card').forEach(card=>{card.onclick=()=>{G.mode=card.dataset.mode;G.region=document.getElementById('regionFilter').value;G.difficulty=document.getElementById('difficultyFilter').value;G.numRounds=parseInt(document.getElementById('roundsFilter').value)||0;if(G.solo){startGame()}else{db.collection('rooms').doc(G.roomId).update({mode:G.mode,region:G.region,difficulty:G.difficulty,phase:'lobby'});showLobby()}}});
 document.getElementById('btnStartGame').onclick=()=>{if(!G.isHost||!G.mode)return;hostStartGame()};
 // Lobby host settings: update the room doc when the host changes mode/region/difficulty
 function lobbyUpdateSetting(field,val){G[field]=val;if(G.isHost&&G.roomId){const u={};u[field]=val;db.collection('rooms').doc(G.roomId).update(u).catch(()=>{})}}
 document.getElementById('lobbyMode').onchange=function(){lobbyUpdateSetting('mode',this.value)};
 document.getElementById('lobbyRegion').onchange=function(){lobbyUpdateSetting('region',this.value)};
 document.getElementById('lobbyDifficulty').onchange=function(){lobbyUpdateSetting('difficulty',this.value)};
+document.getElementById('lobbyRounds').onchange=function(){G.numRounds=parseInt(this.value)||0};
 document.getElementById('btnCopyCode').onclick=()=>{navigator.clipboard.writeText(G.roomId).then(()=>lobbyToast('Code '+G.roomId+' copied!')).catch(()=>lobbyToast('Code: '+G.roomId))};
 document.getElementById('btnCopyLink').onclick=()=>{const link=inviteLink();navigator.clipboard.writeText(link).then(()=>lobbyToast('Invite link copied!')).catch(()=>lobbyToast(link))};
 document.getElementById('btnInstrStart').onclick=()=>{if(G.solo){document.getElementById('btnInstrStart').style.display='none';runCountdown(()=>soloBeginRounds())}else if(G.isHost){document.getElementById('btnInstrStart').disabled=true;document.getElementById('btnInstrStart').textContent='Starting…';db.collection('rooms').doc(G.roomId).update({phase:'countdown'}).catch(()=>{})}};
