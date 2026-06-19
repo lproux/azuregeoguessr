@@ -563,8 +563,15 @@ function playRound(){
   startTimer(timeForRound,null,()=>submitGuessAuto(effectiveMode));
 }
 // "Locked in — waiting for others" overlay (multiplayer only)
-function showWaiting(msg){let el=document.getElementById('waitOverlay');if(!el){el=document.createElement('div');el.id='waitOverlay';el.style.cssText='position:absolute;inset:0;z-index:120;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,8,20,.55);backdrop-filter:blur(3px);text-align:center;padding:1em';document.querySelector('#game .game-wrap').appendChild(el)}el.innerHTML='<div style="font-size:2.4rem;margin-bottom:.3em">✓</div><div style="font-size:1.15rem;font-weight:700;color:#fff">'+(msg||'Locked in')+'</div><div style="color:#8888aa;margin-top:.3em">Waiting for the round to end…</div>';el.style.display='flex'}
+function showWaiting(msg){closeDropdownUI();let el=document.getElementById('waitOverlay');if(!el){el=document.createElement('div');el.id='waitOverlay';el.style.cssText='position:absolute;inset:0;z-index:120;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(8,8,20,.55);backdrop-filter:blur(3px);text-align:center;padding:1em';document.querySelector('#game .game-wrap').appendChild(el)}el.innerHTML='<div style="font-size:2.4rem;margin-bottom:.3em">✓</div><div style="font-size:1.15rem;font-weight:700;color:#fff">'+(msg||'Locked in')+'</div><div style="color:#8888aa;margin-top:.3em">Waiting for the round to end…</div>';el.style.display='flex'}
 function hideWaiting(){const el=document.getElementById('waitOverlay');if(el)el.style.display='none'}
+// Dismiss the country/dropdown picker between rounds: hide the panel, close any open native <select>
+// popup (blur), drop stale onchange handlers, and reset selections so nothing lingers on screen.
+function closeDropdownUI(){
+  const dp=document.getElementById('dropdownPanel');if(dp)dp.classList.remove('visible');
+  ['selContinent','selCountry','selProvince','selCity'].forEach(id=>{const s=document.getElementById(id);if(s){s.onchange=null;try{s.selectedIndex=0}catch(e){};try{s.blur()}catch(e){}}});
+  try{if(document.activeElement&&document.activeElement.blur&&/^SEL/.test(document.activeElement.tagName))document.activeElement.blur()}catch(e){}
+}
 function updateMapInstruction(useDropdown,mode){
   const el=document.getElementById('mapInstruction');if(!el)return;
   let t;
@@ -607,6 +614,7 @@ function setupDropdowns(mode){
 function submitGuessAuto(effectiveMode){if(G.hasGuessed)return;const useDropdown=(effectiveMode==='progressive')||(effectiveMode==='streaks');if(useDropdown){submitDropdownGuess(effectiveMode)}else{submitMapPinGuess()}}
 // After a guess: solo reveals immediately; multiplayer locks in and waits for the host to end the round.
 function afterGuess(distance,pts,guessLat,guessLng){
+  closeDropdownUI(); // dismiss the picker the instant the guess is locked, so it never lingers
   G._pendingResult={distance:distance,pts:pts,guessLat:guessLat,guessLng:guessLng};
   if(G.solo){showRoundResult(distance,pts,guessLat,guessLng);return}
   showWaiting('Guess locked in! +'+pts.toLocaleString()+' pts');
@@ -659,7 +667,7 @@ function submitDropdownGuess(effectiveMode){
 
 // ========== RESULTS ==========
 function showRoundResult(distance,pts,guessLat,guessLng){
-  hideWaiting();audio.playRoundComplete();showScreen('results');
+  hideWaiting();closeDropdownUI();audio.playRoundComplete();showScreen('results');
   const loc=G.currentLocation;
   document.getElementById('resultTitle').textContent='Round '+(G.currentRound+1)+' Complete!';
   initResultMap();
