@@ -222,7 +222,7 @@ input,select{font-family:inherit;outline:none}
 </head>
 <body>
 <div id="welcome" class="screen active"><div class="logo">Azure<span>Guessr</span></div><div class="logo-sub">v4 — The Definitive Geo Quiz 🌍</div><div class="welcome-card"><input id="nameInput" type="text" placeholder="Enter your display name..." maxlength="20" autocomplete="off"/><div class="btn-row"><button class="btn-primary" id="btnHost">🏠 Host Game</button><button class="btn-secondary" id="btnJoin">🔗 Join</button></div><div class="room-input" id="joinRoomInput"><input id="roomCodeInput" type="text" placeholder="ROOM" maxlength="4" autocomplete="off"/><button class="btn-primary" id="btnJoinRoom" style="width:100%;margin-top:.5em">Join Room</button></div><button class="btn-solo" id="btnSolo">🎮 Play Solo</button></div></div>
-<div id="modeSelect" class="screen"><h2>Choose Game Mode</h2><div class="mode-grid"><div class="mode-card" data-mode="classic"><div class="icon">📍</div><h3>Classic</h3><p>Pin on the map. 5 rounds, 60s each. Scored by distance.</p></div><div class="mode-card" data-mode="progressive"><div class="icon">🎯</div><h3>Progressive</h3><p>Continent → Country → Province → City dropdowns. 5 rounds.</p></div><div class="mode-card" data-mode="battleRoyale"><div class="icon">⚔️</div><h3>Battle Royale</h3><p>5000 HP. Distance error drains health. Last standing wins.</p></div><div class="mode-card" data-mode="streaks"><div class="icon">🔥</div><h3>Country Streaks</h3><p>Name the country fast. Points every round, streak bonus, highest total wins.</p></div><div class="mode-card" data-mode="speed"><div class="icon">⚡</div><h3>Speed Run</h3><p>10 rounds, 10s each. Fast map pin guessing.</p></div><div class="mode-card" data-mode="explorer"><div class="icon">🧭</div><h3>Explorer</h3><p>No timer. Learn about each location. Practice mode.</p></div><div class="mode-card" data-mode="mixed"><div class="icon">🎲</div><h3>Mixed Mode</h3><p>10 rounds mixing Classic, Progressive, NMPZ & Speed.</p></div></div><div class="filter-row"><select id="regionFilter"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><select id="difficultyFilter"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select><select id="roundsFilter" title="Number of rounds"><option value="">Rounds: Default</option><option value="3">3 rounds</option><option value="5">5 rounds</option><option value="7">7 rounds</option><option value="10">10 rounds</option><option value="15">15 rounds</option><option value="20">20 rounds</option></select><button class="btn-back" id="btnBackWelcome">← Back</button></div></div>
+<div id="modeSelect" class="screen"><h2>Choose Game Mode</h2><div class="mode-grid"><div class="mode-card" data-mode="classic"><div class="icon">📍</div><h3>Classic</h3><p>Pin on the map. 5 rounds, 60s each. Scored by distance.</p></div><div class="mode-card" data-mode="progressive"><div class="icon">🎯</div><h3>Progressive</h3><p>Continent → Country → Province → City dropdowns. 5 rounds.</p></div><div class="mode-card" data-mode="battleRoyale"><div class="icon">⚔️</div><h3>Battle Royale</h3><p>5000 HP. Distance error drains health. Last standing wins.</p></div><div class="mode-card" data-mode="streaks"><div class="icon">🔥</div><h3>Country Streaks</h3><p>Name the country fast. Points every round, streak bonus, highest total wins.</p></div><div class="mode-card" data-mode="speed"><div class="icon">⚡</div><h3>Speed Run</h3><p>10 rounds, 20s each. Fast map pin guessing.</p></div><div class="mode-card" data-mode="explorer"><div class="icon">🧭</div><h3>Explorer</h3><p>No timer. Learn about each location. Practice mode.</p></div><div class="mode-card" data-mode="mixed"><div class="icon">🎲</div><h3>Mixed Mode</h3><p>10 rounds mixing Classic, Progressive, NMPZ & Speed.</p></div></div><div class="filter-row"><select id="regionFilter"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><select id="difficultyFilter"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select><select id="roundsFilter" title="Number of rounds"><option value="">Rounds: Default</option><option value="3">3 rounds</option><option value="5">5 rounds</option><option value="7">7 rounds</option><option value="10">10 rounds</option><option value="15">15 rounds</option><option value="20">20 rounds</option></select><button class="btn-back" id="btnBackWelcome">← Back</button></div></div>
 <div id="lobby" class="screen"><div class="lobby-box"><h2>Game Lobby</h2><div class="lobby-share"><div class="lobby-share-label">Room code — share it so friends can join</div><div class="room-code-big" id="lobbyRoomCode" title="Click to copy">----</div><div class="lobby-share-row"><button class="copy-btn" id="btnCopyCode">📋 Copy code</button><button class="copy-btn" id="btnCopyLink">🔗 Copy invite link</button></div><div class="copy-toast" id="copyToast"></div></div><div class="host-settings" id="hostSettings" style="display:none"><div class="hs-row"><label>Mode</label><select id="lobbyMode"><option value="classic">📍 Classic</option><option value="progressive">🎯 Progressive</option><option value="battleRoyale">⚔️ Battle Royale</option><option value="streaks">🔥 Country Streaks</option><option value="speed">⚡ Speed Run</option><option value="explorer">🧭 Explorer</option><option value="mixed">🎲 Mixed Mode</option></select></div><div class="hs-row"><label>Region</label><select id="lobbyRegion"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><label>Difficulty</label><select id="lobbyDifficulty"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select><label>Rounds</label><select id="lobbyRounds"><option value="">Default</option><option value="3">3</option><option value="5">5</option><option value="7">7</option><option value="10">10</option><option value="15">15</option><option value="20">20</option></select></div></div><div class="lobby-info" id="lobbyInfo">Waiting for host...</div><div class="player-chips" id="playerChips"></div><button class="lobby-btn" id="btnStartGame" style="display:none">🚀 Start Game</button><button class="lobby-btn" id="btnLeaveLobby" style="background:#2a2a4a;border:1px solid #555">Leave</button></div></div>
 <div id="game" class="screen"><div class="game-wrap"><div class="hud"><div class="hud-left"><span class="hud-badge" id="hudRound">Round 1/5</span><span class="hud-badge" id="hudScore">Score: 0</span><span class="hud-badge" id="hudMode" style="display:none"></span><span class="hud-badge" id="hudPlayers" style="display:none">👥 1</span></div><div class="hud-right"><div class="timer-ring"><svg width="42" height="42"><circle class="bg" cx="21" cy="21" r="17"/><circle class="fg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="0"/></svg><div class="timer-text" id="timerText">60</div></div><button class="music-btn" id="btnMusic" title="Toggle music (M)">🔊</button></div></div><div class="health-bars" id="healthBars"></div><div class="streak-display" id="streakDisplay">🔥 <span id="streakCount">0</span></div><div class="map-area"><div class="map-instruction" id="mapInstruction"></div><div id="satMap"></div><div class="guess-map-container" id="guessMapContainer"><div class="expand-btn" id="expandGuess">⛶</div><div id="guessMap"></div><button class="submit-guess" id="btnSubmitGuess">✓ Submit Guess</button></div><div class="dropdown-panel" id="dropdownPanel"><div class="dd-group" id="ddContinent"><label>Continent</label><select id="selContinent"><option value="">—</option></select></div><div class="dd-group" id="ddCountry"><label>Country</label><select id="selCountry" disabled><option value="">—</option></select></div><div class="dd-group" id="ddProvince"><label>Province/State</label><select id="selProvince" disabled><option value="">—</option></select></div><div class="dd-group" id="ddCity"><label>City</label><select id="selCity" disabled><option value="">—</option></select></div><button class="dd-submit" id="btnSubmitDropdown">Submit ✓</button></div></div></div></div>
 <div id="results" class="screen"><div class="results-box"><h2 id="resultTitle">Round Complete!</h2><div class="result-map-wrap"><div id="resultMap"></div></div><div id="resultLocationInfo"></div><div class="result-stats" id="resultStats"></div><div id="resultPointsAnim"></div><div class="mini-podium" id="resultPodium"></div><div class="scoreboard" id="resultScoreboard"></div><div class="result-btns"><button class="btn-primary" id="btnNextRound">Next Round →</button><button class="btn-secondary" id="btnQuitGame" style="background:transparent;border:1px solid #555;color:var(--text-dim)">Quit</button></div></div></div>
@@ -423,23 +423,93 @@ const CONTINENTS=['Africa','Americas','Asia','Europe','Oceania'];
 function getCountriesForContinent(cont,pool){return[...new Set((pool||LOCATIONS).filter(l=>l.continent===cont).map(l=>l.country))]}
 function getProvincesForCountry(c,pool){return[...new Set((pool||LOCATIONS).filter(l=>l.country===c).map(l=>l.province))]}
 function getCitiesForContinent(cont,pool){return[...new Set((pool||LOCATIONS).filter(l=>l.continent===cont).map(l=>l.city))]}
+function getCitiesForCountry(c,pool){return[...new Set((pool||LOCATIONS).filter(l=>l.country===c).map(l=>l.city))]}
+// ===== Confined geography for Progressive mode =====
+// Real first-level regions per country (distractors stay inside the chosen country).
+var COUNTRY_REGIONS={
+"France":["Provence-Alpes-Côte d'Azur","Occitanie","Brittany","Normandy","Grand Est","Nouvelle-Aquitaine"],
+"United Kingdom":["England","Scotland","Wales","Northern Ireland"],
+"Germany":["Bavaria","Hesse","Saxony","Hamburg","North Rhine-Westphalia","Baden-Württemberg"],
+"Italy":["Lazio","Lombardy","Tuscany","Veneto","Campania","Sicily","Piedmont"],
+"Spain":["Madrid","Catalonia","Andalusia","Valencia","Galicia","Basque Country"],
+"Sweden":["Skåne","Västra Götaland","Uppsala","Östergötland","Halland"],
+"Denmark":["Central Denmark","Southern Denmark","North Denmark","Zealand"],
+"Czechia":["South Moravian","Central Bohemian","Moravian-Silesian","Plzeň","Liberec"],
+"Hungary":["Pest","Győr-Moson-Sopron","Borsod-Abaúj-Zemplén","Hajdú-Bihar","Baranya"],
+"Austria":["Styria","Tyrol","Upper Austria","Salzburg","Carinthia"],
+"Portugal":["Porto","Faro","Braga","Coimbra","Setúbal"],
+"Ireland":["Munster","Connacht","Ulster"],
+"Finland":["Pirkanmaa","Varsinais-Suomi","North Ostrobothnia","Lapland","Kymenlaakso"],
+"Norway":["Vestland","Rogaland","Trøndelag","Viken","Agder"],
+"Switzerland":["Zürich","Bern","Vaud","Ticino","Basel-City"],
+"Poland":["Lesser Poland","Silesia","Greater Poland","Pomerania","Lower Silesia","Łódź"],
+"Greece":["Central Macedonia","Thessaly","Crete","Peloponnese","Epirus"],
+"Turkey":["Ankara","İzmir","Antalya","Bursa","Adana"],
+"Romania":["Cluj","Timiș","Iași","Brașov","Constanța"],
+"Bulgaria":["Plovdiv","Varna","Burgas","Ruse","Stara Zagora"],
+"Iceland":["Southern Peninsula","Westfjords","Northeastern Region","Southern Region","Western Region"],
+"Netherlands":["South Holland","Utrecht","North Brabant","Gelderland","Overijssel"],
+"Latvia":["Vidzeme","Kurzeme","Latgale","Zemgale"],
+"Croatia":["Split-Dalmatia","Istria","Primorje-Gorski Kotar","Osijek-Baranja","Dubrovnik-Neretva"],
+"Japan":["Osaka","Kyoto","Hokkaido","Aichi","Fukuoka","Kanagawa"],
+"Hong Kong":["Hong Kong Island","Kowloon","New Territories"],
+"Singapore":["Central Region","East Region","North Region","West Region","North-East Region"],
+"South Korea":["Busan","Incheon","Gyeonggi","Daegu","Daejeon"],
+"Thailand":["Chiang Mai","Phuket","Chon Buri","Nonthaburi","Khon Kaen"],
+"India":["Maharashtra","Karnataka","Tamil Nadu","West Bengal","Gujarat","Rajasthan"],
+"China":["Shanghai","Guangdong","Sichuan","Zhejiang","Jiangsu","Hubei"],
+"UAE":["Abu Dhabi","Sharjah","Ajman","Ras Al Khaimah","Fujairah"],
+"Saudi Arabia":["Makkah","Eastern Province","Madinah","Asir","Tabuk"],
+"Philippines":["Cebu","Davao","Iloilo","Pampanga","Bulacan"],
+"Vietnam":["Ho Chi Minh City","Da Nang","Hai Phong","Can Tho","Hue"],
+"Malaysia":["Selangor","Penang","Johor","Sabah","Sarawak"],
+"Indonesia":["West Java","East Java","Bali","North Sumatra","Central Java"],
+"Lebanon":["Mount Lebanon","North Governorate","Bekaa","South Governorate","Nabatieh"],
+"Iran":["Isfahan","Fars","Razavi Khorasan","East Azerbaijan","Mazandaran"],
+"United States":["California","Illinois","Washington","Texas","Florida","Arizona","Nevada","Colorado","Massachusetts","Georgia"],
+"Canada":["Quebec","British Columbia","Alberta","Manitoba","Nova Scotia","Saskatchewan"],
+"Mexico":["Jalisco","Nuevo León","Puebla","Yucatán","Baja California","Veracruz"],
+"Argentina":["Córdoba","Santa Fe","Mendoza","Tucumán","Salta"],
+"Chile":["Valparaíso","Biobío","Antofagasta","Araucanía","Maule"],
+"Peru":["Arequipa","Cusco","La Libertad","Piura","Lambayeque"],
+"Brazil":["São Paulo","Minas Gerais","Bahia","Paraná","Rio Grande do Sul","Pernambuco"],
+"Colombia":["Antioquia","Valle del Cauca","Atlántico","Santander","Bolívar"],
+"Ecuador":["Guayas","Azuay","Manabí","Tungurahua","El Oro"],
+"South Africa":["Gauteng","KwaZulu-Natal","Eastern Cape","Free State","Mpumalanga"],
+"Egypt":["Giza","Alexandria","Luxor","Aswan","Port Said"],
+"Morocco":["Rabat-Salé-Kénitra","Marrakesh-Safi","Fès-Meknès","Tanger-Tétouan","Oriental"],
+"Kenya":["Mombasa","Kisumu","Nakuru","Uasin Gishu","Kiambu"],
+"Nigeria":["Federal Capital Territory","Kano","Rivers","Oyo","Kaduna"],
+"Senegal":["Thiès","Saint-Louis","Ziguinchor","Kaolack","Diourbel"],
+"Ethiopia":["Oromia","Amhara","Tigray","Sidama","Afar"],
+"Tanzania":["Dodoma","Mwanza","Arusha","Zanzibar","Mbeya"],
+"Tunisia":["Sfax","Sousse","Kairouan","Bizerte","Gabès"],
+"Ghana":["Ashanti","Western","Central","Northern","Eastern"],
+"Mali":["Sikasso","Ségou","Mopti","Kayes","Koulikoro"],
+"Australia":["Victoria","Queensland","Western Australia","South Australia","Tasmania","Northern Territory"],
+"New Zealand":["Canterbury","Otago","Waikato","Bay of Plenty","Manawatū-Whanganui"],
+"Fiji":["Central Division","Western Division","Northern Division","Eastern Division"]
+};
+// Real cities per country (fallback distractor pool, kept inside the chosen country).
+var COUNTRY_CITIES={
+"France":["Paris","Marseille","Lyon","Toulouse","Nice"],"United Kingdom":["London","Manchester","Birmingham","Liverpool","Edinburgh"],"Germany":["Berlin","Munich","Hamburg","Frankfurt","Cologne"],"Italy":["Rome","Milan","Florence","Naples","Venice","Turin"],"Spain":["Madrid","Barcelona","Valencia","Seville","Bilbao"],"Sweden":["Stockholm","Gothenburg","Malmö","Uppsala"],"Denmark":["Copenhagen","Aarhus","Odense","Aalborg"],"Czechia":["Prague","Brno","Ostrava","Plzeň"],"Hungary":["Budapest","Debrecen","Szeged","Miskolc"],"Austria":["Vienna","Graz","Linz","Salzburg","Innsbruck"],"Portugal":["Lisbon","Porto","Braga","Coimbra","Faro"],"Ireland":["Dublin","Cork","Galway","Limerick"],"Finland":["Helsinki","Espoo","Tampere","Turku"],"Norway":["Oslo","Bergen","Stavanger","Trondheim"],"Switzerland":["Geneva","Zürich","Bern","Basel","Lausanne"],"Poland":["Warsaw","Kraków","Łódź","Wrocław","Poznań","Gdańsk"],"Greece":["Athens","Thessaloniki","Patras","Heraklion"],"Turkey":["Istanbul","Ankara","İzmir","Antalya","Bursa"],"Romania":["Bucharest","Cluj-Napoca","Timișoara","Iași","Brașov"],"Bulgaria":["Sofia","Plovdiv","Varna","Burgas"],"Iceland":["Reykjavik","Kópavogur","Hafnarfjörður","Akureyri"],"Netherlands":["Amsterdam","Rotterdam","The Hague","Utrecht","Eindhoven"],"Latvia":["Riga","Daugavpils","Liepāja","Jelgava"],"Croatia":["Zagreb","Split","Rijeka","Osijek","Dubrovnik"],"Japan":["Tokyo","Osaka","Kyoto","Yokohama","Nagoya","Sapporo"],"Hong Kong":["Hong Kong","Kowloon","Tsuen Wan","Sha Tin"],"Singapore":["Singapore","Jurong","Tampines","Woodlands"],"South Korea":["Seoul","Busan","Incheon","Daegu","Daejeon"],"Thailand":["Bangkok","Chiang Mai","Phuket","Pattaya","Nonthaburi"],"India":["New Delhi","Mumbai","Bangalore","Chennai","Kolkata","Hyderabad"],"China":["Beijing","Shanghai","Guangzhou","Shenzhen","Chengdu","Hangzhou"],"UAE":["Dubai","Abu Dhabi","Sharjah","Al Ain"],"Saudi Arabia":["Riyadh","Jeddah","Mecca","Medina","Dammam"],"Philippines":["Manila","Quezon City","Cebu City","Davao","Makati"],"Vietnam":["Hanoi","Ho Chi Minh City","Da Nang","Hai Phong"],"Malaysia":["Kuala Lumpur","George Town","Johor Bahru","Ipoh","Kuching"],"Indonesia":["Jakarta","Surabaya","Bandung","Medan","Denpasar"],"Lebanon":["Beirut","Tripoli","Sidon","Tyre"],"Iran":["Tehran","Mashhad","Isfahan","Shiraz","Tabriz"],"United States":["New York City","Los Angeles","Chicago","Houston","Miami","Seattle","San Francisco","Phoenix","Denver","Las Vegas"],"Canada":["Toronto","Montreal","Vancouver","Calgary","Ottawa","Edmonton"],"Mexico":["Mexico City","Guadalajara","Monterrey","Puebla","Cancún","Tijuana"],"Argentina":["Buenos Aires","Córdoba","Rosario","Mendoza","La Plata"],"Chile":["Santiago","Valparaíso","Concepción","Antofagasta","Viña del Mar"],"Peru":["Lima","Arequipa","Cusco","Trujillo","Chiclayo"],"Brazil":["Rio de Janeiro","São Paulo","Brasília","Salvador","Belo Horizonte","Curitiba"],"Colombia":["Bogotá","Medellín","Cali","Barranquilla","Cartagena"],"Ecuador":["Quito","Guayaquil","Cuenca","Ambato"],"South Africa":["Cape Town","Johannesburg","Durban","Pretoria","Gqeberha"],"Egypt":["Cairo","Alexandria","Giza","Luxor","Aswan"],"Morocco":["Casablanca","Rabat","Marrakesh","Fès","Tangier"],"Kenya":["Nairobi","Mombasa","Kisumu","Nakuru"],"Nigeria":["Lagos","Abuja","Kano","Ibadan","Port Harcourt"],"Senegal":["Dakar","Thiès","Saint-Louis","Ziguinchor"],"Ethiopia":["Addis Ababa","Dire Dawa","Mekelle","Gondar"],"Tanzania":["Dar es Salaam","Dodoma","Mwanza","Arusha","Zanzibar City"],"Tunisia":["Tunis","Sfax","Sousse","Kairouan"],"Ghana":["Accra","Kumasi","Tamale","Takoradi"],"Mali":["Bamako","Sikasso","Ségou","Mopti"],"Australia":["Sydney","Melbourne","Brisbane","Perth","Adelaide","Gold Coast"],"New Zealand":["Auckland","Wellington","Christchurch","Hamilton","Dunedin"],"Fiji":["Suva","Nadi","Lautoka","Labasa"]
+};
+// Real cities per region (city distractors stay inside the chosen region where we have data).
+var PROVINCE_CITIES={
+"Île-de-France":["Paris","Versailles","Boulogne-Billancourt","Saint-Denis","Nanterre"],"England":["London","Manchester","Birmingham","Liverpool","Leeds","Bristol"],"Lazio":["Rome","Latina","Frosinone","Viterbo"],"Lombardy":["Milan","Bergamo","Brescia","Como","Monza"],"Tuscany":["Florence","Pisa","Siena","Livorno","Lucca"],"Catalonia":["Barcelona","Girona","Tarragona","Lleida","Sabadell"],"Madrid":["Madrid","Móstoles","Alcalá de Henares","Getafe"],"California":["Los Angeles","San Francisco","San Diego","Sacramento","San Jose","Oakland"],"New York":["New York City","Buffalo","Rochester","Albany","Syracuse"],"Illinois":["Chicago","Aurora","Naperville","Springfield"],"Texas":["Houston","Dallas","Austin","San Antonio","Fort Worth"],"Florida":["Miami","Orlando","Tampa","Jacksonville","Fort Lauderdale"],"Washington":["Seattle","Spokane","Tacoma","Bellevue"],"Arizona":["Phoenix","Tucson","Mesa","Scottsdale"],"Nevada":["Las Vegas","Reno","Henderson","Carson City"],"Colorado":["Denver","Colorado Springs","Aurora","Boulder"],"Ontario":["Toronto","Ottawa","Hamilton","London","Mississauga"],"Quebec":["Montreal","Quebec City","Laval","Gatineau"],"British Columbia":["Vancouver","Victoria","Surrey","Kelowna","Burnaby"],"New South Wales":["Sydney","Newcastle","Wollongong","Central Coast"],"Victoria":["Melbourne","Geelong","Ballarat","Bendigo"],"Queensland":["Brisbane","Gold Coast","Cairns","Townsville","Toowoomba"],"Western Australia":["Perth","Fremantle","Bunbury","Mandurah"],"Maharashtra":["Mumbai","Pune","Nagpur","Nashik","Aurangabad"],"Jalisco":["Guadalajara","Zapopan","Puerto Vallarta","Tlaquepaque"],"Western Cape":["Cape Town","Stellenbosch","George","Paarl"],"Gauteng":["Johannesburg","Pretoria","Soweto","Sandton"],"North Holland":["Amsterdam","Haarlem","Alkmaar","Zaandam"],"Attica":["Athens","Piraeus","Marousi","Glyfada"],"Leinster":["Dublin","Kilkenny","Wexford","Drogheda"],"Uusimaa":["Helsinki","Espoo","Vantaa","Porvoo"],"Masovia":["Warsaw","Radom","Płock","Siedlce"],"São Paulo":["São Paulo","Campinas","Guarulhos","Santos"],"Rio de Janeiro":["Rio de Janeiro","Niterói","Petrópolis","Nova Iguaçu"],"Pichincha":["Quito","Sangolquí","Cayambe"]
+};
+function pickDistractors(correct,pool,n){return shuffle((pool||[]).filter(x=>x&&x!==correct)).slice(0,n)}
 function generateDropdownOptions(loc,pool){
   pool=pool||LOCATIONS;
   const continents=shuffle([...CONTINENTS]);
-  let sameContCountries=getCountriesForContinent(loc.continent,pool).filter(c=>c!==loc.country);
-  let otherCountries=[...new Set(pool.map(l=>l.country))].filter(c=>c!==loc.country&&!sameContCountries.includes(c));
-  let wrongCountries=shuffle(sameContCountries).slice(0,4);
-  if(wrongCountries.length<7)wrongCountries=wrongCountries.concat(shuffle(otherCountries).slice(0,7-wrongCountries.length));
-  wrongCountries=wrongCountries.slice(0,7);
-  const countries=shuffle([loc.country,...wrongCountries]);
-  let sameCountryProv=getProvincesForCountry(loc.country,pool).filter(p=>p!==loc.province);
-  let otherProv=[...new Set(pool.map(l=>l.province))].filter(p=>p!==loc.province&&!sameCountryProv.includes(p));
-  let wrongProv=shuffle(sameCountryProv).slice(0,3).concat(shuffle(otherProv).slice(0,2));wrongProv=wrongProv.slice(0,5);
-  const provinces=shuffle([loc.province,...wrongProv]);
-  let sameCities=getCitiesForContinent(loc.continent,pool).filter(c=>c!==loc.city);
-  let otherCities=[...new Set(pool.map(l=>l.city))].filter(c=>c!==loc.city);
-  let wrongCities=shuffle(sameCities).slice(0,3).concat(shuffle(otherCities).slice(0,1));wrongCities=wrongCities.slice(0,4);
-  const cities=shuffle([loc.city,...wrongCities]);
+  // Countries: confined to the location's continent
+  const countries=shuffle([loc.country,...pickDistractors(loc.country,getCountriesForContinent(loc.continent,pool),7)]);
+  // Provinces: confined to the location's country
+  const provPool=COUNTRY_REGIONS[loc.country]||getProvincesForCountry(loc.country,pool);
+  const provinces=shuffle([loc.province,...pickDistractors(loc.province,provPool,5)]);
+  // Cities: confined to the location's region, falling back to the country
+  const cityPool=PROVINCE_CITIES[loc.province]||COUNTRY_CITIES[loc.country]||getCitiesForCountry(loc.country,pool);
+  const cities=shuffle([loc.city,...pickDistractors(loc.city,cityPool,4)]);
   return{continents,countries,provinces,cities};
 }
 function generateCountryOptions(loc,pool){pool=pool||LOCATIONS;let all=[...new Set(pool.map(l=>l.country))].filter(c=>c!==loc.country);let opts=shuffle(all).slice(0,19);opts.push(loc.country);return shuffle(opts)}
@@ -474,8 +544,8 @@ function totalRoundsFor(mode){return (mode==='speed'||mode==='mixed')?10:(mode==
 function chosenRounds(mode){return (G.numRounds&&G.numRounds>0)?G.numRounds:totalRoundsFor(mode)}
 function roundSecondsFor(mode,round){
   let em=mode,t=60;
-  if(mode==='mixed'){em=getMixedRoundType(round);if(em==='speed')t=10;else if(em==='progressive')t=30;else if(em==='streaks')t=15;else t=60}
-  else if(mode==='speed')t=10;else if(mode==='progressive')t=30;else if(mode==='streaks')t=20;
+  if(mode==='mixed'){em=getMixedRoundType(round);if(em==='speed')t=20;else if(em==='progressive')t=30;else if(em==='streaks')t=15;else t=60}
+  else if(mode==='speed')t=20;else if(mode==='progressive')t=30;else if(mode==='streaks')t=20;
   else if(mode==='battleRoyale')t=40;else if(mode==='explorer')t=45; // explorer capped so MP conductor can advance
   return t;
 }
@@ -533,8 +603,8 @@ function playRound(){
   hideWaiting();
   G.currentLocation=G.locations[G.currentRound];G.hasGuessed=false;G.roundActive=true;
   let effectiveMode=G.mode,effectiveDiff=G.difficulty,timeForRound=60;
-  if(G.mode==='mixed'){effectiveMode=getMixedRoundType(G.currentRound);if(effectiveMode==='nmpz')effectiveDiff='nmpz';else if(effectiveMode==='speed')timeForRound=10;else effectiveDiff='moving'}
-  if(G.mode==='speed')timeForRound=10;
+  if(G.mode==='mixed'){effectiveMode=getMixedRoundType(G.currentRound);if(effectiveMode==='nmpz')effectiveDiff='nmpz';else if(effectiveMode==='speed')timeForRound=20;else effectiveDiff='moving'}
+  if(G.mode==='speed')timeForRound=20;
   if(G.mode==='progressive'||effectiveMode==='progressive')timeForRound=30;
   if(G.mode==='explorer')timeForRound=G.solo?9999:45;
   if(G.mode==='streaks')timeForRound=20;
