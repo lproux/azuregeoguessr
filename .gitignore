@@ -1,0 +1,7 @@
+# azd local environment (may contain secrets / per-user state)
+.azure/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
