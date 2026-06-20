@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+name: azuregeoguessr
+metadata:
+  template: azuregeoguessr@1.0.0
+infra:
+  provider: bicep
+  path: infra
+  module: main
+services:
+  web:
+    # The game is a single static index.html (plus the SWA config). No build step.
+    project: .
+    language: js
+    host: staticwebapp
+    dist: .
