@@ -86,6 +86,10 @@ input,select{font-family:inherit;outline:none}
 #game{flex-direction:row;padding:0;background:var(--bg)}
 .map-area{flex:1;display:flex;position:relative;min-height:0}
 #satMap{flex:1;z-index:1;background:#111}
+#panoView{flex:1;z-index:1;background:#111;display:none}
+/* hide Google's default address/terms clutter that could leak the place name */
+#panoView .gm-style-cc,#panoView .gmnoprint a,#panoView a[href^="https://maps.google"]{display:none!important}
+.pano-badge{position:absolute;bottom:10px;left:10px;z-index:70;background:rgba(15,15,35,.85);border:1px solid rgba(0,120,212,.4);border-radius:8px;padding:.3em .7em;font-size:.72rem;color:var(--text-dim);pointer-events:none}
 .guess-map-container{position:absolute;bottom:14px;right:14px;width:min(46vw,560px);height:min(46vh,420px);border-radius:var(--radius);overflow:hidden;border:2px solid var(--azure);z-index:50;transition:all .35s;box-shadow:0 6px 24px rgba(0,0,0,.6)}
 .guess-map-container.expanded{width:72%;height:78%;bottom:0;right:0;border-radius:0}
 .guess-map-container .expand-btn{position:absolute;top:6px;left:6px;z-index:999;background:rgba(0,0,0,.75);color:#fff;border-radius:4px;padding:3px 9px;font-size:.72rem;cursor:pointer}
@@ -218,13 +222,36 @@ input,select{font-family:inherit;outline:none}
 .mini-podium .mp-name{font-size:.72rem;font-weight:700;max-width:74px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mini-podium .mp-score{font-size:.66rem;opacity:.75;font-weight:600}
 .podium-icon-big{font-size:2.1rem;line-height:1;margin-bottom:.1em}
+/* ===== Street View settings ===== */
+.sv-link{display:block;margin-top:1em;color:var(--text-dim);font-size:.82rem;text-align:center;cursor:pointer;background:none;border:none;width:100%}
+.sv-link:hover{color:var(--azure)}
+.sv-link .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#555;margin-right:.35em;vertical-align:middle}
+.sv-link .dot.on{background:var(--green)}
+#svOverlay{position:fixed;inset:0;z-index:99991;display:none;align-items:center;justify-content:center;background:rgba(8,8,20,.8);backdrop-filter:blur(4px);padding:1em}
+#svOverlay.show{display:flex}
+.sv-card{background:var(--card);border-radius:var(--radius);padding:1.5em 1.6em;width:min(480px,94vw);max-height:88vh;overflow-y:auto;box-shadow:0 12px 50px rgba(0,0,0,.6)}
+.sv-card h3{text-align:center;margin-bottom:.3em}
+.sv-card p{color:var(--text-dim);font-size:.84rem;line-height:1.55;margin:.6em 0}
+.sv-card ol{color:var(--text-dim);font-size:.82rem;line-height:1.6;margin:.5em 0 .5em 1.2em}
+.sv-card a{color:var(--azure)}
+.sv-card input[type=text]{width:100%;padding:.7em .9em;border-radius:8px;border:2px solid #333;background:#0d1117;color:#fff;font-size:.92rem;margin:.5em 0}
+.sv-card input[type=text]:focus{border-color:var(--azure)}
+.sv-toggle{display:flex;align-items:center;gap:.6em;margin:.8em 0;font-size:.9rem}
+.sv-toggle input{width:18px;height:18px}
+.sv-actions{display:flex;gap:.7em;margin-top:1.1em}
+.sv-actions button{flex:1;padding:.7em;border-radius:8px;font-weight:700;font-size:.9rem}
+.sv-save{background:var(--azure);color:#fff}
+.sv-cancel{background:transparent;color:var(--text-dim);border:1px solid #555}
+.sv-status{text-align:center;font-size:.8rem;margin-top:.6em}
+.sv-status.ok{color:var(--green)}
+.sv-status.off{color:var(--text-dim)}
 </style>
 </head>
 <body>
-<div id="welcome" class="screen active"><div class="logo">Azure<span>Guessr</span></div><div class="logo-sub">v4 — The Definitive Geo Quiz 🌍</div><div class="welcome-card"><input id="nameInput" type="text" placeholder="Enter your display name..." maxlength="20" autocomplete="off"/><div class="btn-row"><button class="btn-primary" id="btnHost">🏠 Host Game</button><button class="btn-secondary" id="btnJoin">🔗 Join</button></div><div class="room-input" id="joinRoomInput"><input id="roomCodeInput" type="text" placeholder="ROOM" maxlength="4" autocomplete="off"/><button class="btn-primary" id="btnJoinRoom" style="width:100%;margin-top:.5em">Join Room</button></div><button class="btn-solo" id="btnSolo">🎮 Play Solo</button></div></div>
+<div id="welcome" class="screen active"><div class="logo">Azure<span>Guessr</span></div><div class="logo-sub">v4 — The Definitive Geo Quiz 🌍</div><div class="welcome-card"><input id="nameInput" type="text" placeholder="Enter your display name..." maxlength="20" autocomplete="off"/><div class="btn-row"><button class="btn-primary" id="btnHost">🏠 Host Game</button><button class="btn-secondary" id="btnJoin">🔗 Join</button></div><div class="room-input" id="joinRoomInput"><input id="roomCodeInput" type="text" placeholder="ROOM" maxlength="4" autocomplete="off"/><button class="btn-primary" id="btnJoinRoom" style="width:100%;margin-top:.5em">Join Room</button></div><button class="btn-solo" id="btnSolo">🎮 Play Solo</button><button class="sv-link" id="btnSvSettings"><span class="dot" id="svDot"></span>Street View setup</button></div></div>
 <div id="modeSelect" class="screen"><h2>Choose Game Mode</h2><div class="mode-grid"><div class="mode-card" data-mode="classic"><div class="icon">📍</div><h3>Classic</h3><p>Pin on the map. 5 rounds, 60s each. Scored by distance.</p></div><div class="mode-card" data-mode="progressive"><div class="icon">🎯</div><h3>Progressive</h3><p>Continent → Country → Province → City dropdowns. 5 rounds.</p></div><div class="mode-card" data-mode="battleRoyale"><div class="icon">⚔️</div><h3>Battle Royale</h3><p>5000 HP. Distance error drains health. Last standing wins.</p></div><div class="mode-card" data-mode="streaks"><div class="icon">🔥</div><h3>Country Streaks</h3><p>Name the country fast. Points every round, streak bonus, highest total wins.</p></div><div class="mode-card" data-mode="speed"><div class="icon">⚡</div><h3>Speed Run</h3><p>10 rounds, 20s each. Fast map pin guessing.</p></div><div class="mode-card" data-mode="explorer"><div class="icon">🧭</div><h3>Explorer</h3><p>No timer. Learn about each location. Practice mode.</p></div><div class="mode-card" data-mode="mixed"><div class="icon">🎲</div><h3>Mixed Mode</h3><p>10 rounds mixing Classic, Progressive, NMPZ & Speed.</p></div></div><div class="filter-row"><select id="regionFilter"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><select id="difficultyFilter"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select><select id="roundsFilter" title="Number of rounds"><option value="">Rounds: Default</option><option value="3">3 rounds</option><option value="5">5 rounds</option><option value="7">7 rounds</option><option value="10">10 rounds</option><option value="15">15 rounds</option><option value="20">20 rounds</option></select><button class="btn-back" id="btnBackWelcome">← Back</button></div></div>
 <div id="lobby" class="screen"><div class="lobby-box"><h2>Game Lobby</h2><div class="lobby-share"><div class="lobby-share-label">Room code — share it so friends can join</div><div class="room-code-big" id="lobbyRoomCode" title="Click to copy">----</div><div class="lobby-share-row"><button class="copy-btn" id="btnCopyCode">📋 Copy code</button><button class="copy-btn" id="btnCopyLink">🔗 Copy invite link</button></div><div class="copy-toast" id="copyToast"></div></div><div class="host-settings" id="hostSettings" style="display:none"><div class="hs-row"><label>Mode</label><select id="lobbyMode"><option value="classic">📍 Classic</option><option value="progressive">🎯 Progressive</option><option value="battleRoyale">⚔️ Battle Royale</option><option value="streaks">🔥 Country Streaks</option><option value="speed">⚡ Speed Run</option><option value="explorer">🧭 Explorer</option><option value="mixed">🎲 Mixed Mode</option></select></div><div class="hs-row"><label>Region</label><select id="lobbyRegion"><option value="world">🌍 World</option><option value="europe">🇪🇺 Europe</option><option value="asia">🌏 Asia</option><option value="americas">🌎 Americas</option><option value="africa">🌍 Africa & ME</option><option value="oceania">🏝️ Oceania</option><option value="azure">☁️ Azure DCs</option></select><label>Difficulty</label><select id="lobbyDifficulty"><option value="moving">Moving (easy)</option><option value="noMove">No Move</option><option value="nmpz">NMPZ (hardest)</option></select><label>Rounds</label><select id="lobbyRounds"><option value="">Default</option><option value="3">3</option><option value="5">5</option><option value="7">7</option><option value="10">10</option><option value="15">15</option><option value="20">20</option></select></div></div><div class="lobby-info" id="lobbyInfo">Waiting for host...</div><div class="player-chips" id="playerChips"></div><button class="lobby-btn" id="btnStartGame" style="display:none">🚀 Start Game</button><button class="lobby-btn" id="btnLeaveLobby" style="background:#2a2a4a;border:1px solid #555">Leave</button></div></div>
-<div id="game" class="screen"><div class="game-wrap"><div class="hud"><div class="hud-left"><span class="hud-badge" id="hudRound">Round 1/5</span><span class="hud-badge" id="hudScore">Score: 0</span><span class="hud-badge" id="hudMode" style="display:none"></span><span class="hud-badge" id="hudPlayers" style="display:none">👥 1</span></div><div class="hud-right"><div class="timer-ring"><svg width="42" height="42"><circle class="bg" cx="21" cy="21" r="17"/><circle class="fg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="0"/></svg><div class="timer-text" id="timerText">60</div></div><button class="music-btn" id="btnMusic" title="Toggle music (M)">🔊</button></div></div><div class="health-bars" id="healthBars"></div><div class="streak-display" id="streakDisplay">🔥 <span id="streakCount">0</span></div><div class="map-area"><div class="map-instruction" id="mapInstruction"></div><div id="satMap"></div><div class="guess-map-container" id="guessMapContainer"><div class="expand-btn" id="expandGuess">⛶</div><div id="guessMap"></div><button class="submit-guess" id="btnSubmitGuess">✓ Submit Guess</button></div><div class="dropdown-panel" id="dropdownPanel"><div class="dd-group" id="ddContinent"><label>Continent</label><select id="selContinent"><option value="">—</option></select></div><div class="dd-group" id="ddCountry"><label>Country</label><select id="selCountry" disabled><option value="">—</option></select></div><div class="dd-group" id="ddProvince"><label>Province/State</label><select id="selProvince" disabled><option value="">—</option></select></div><div class="dd-group" id="ddCity"><label>City</label><select id="selCity" disabled><option value="">—</option></select></div><button class="dd-submit" id="btnSubmitDropdown">Submit ✓</button></div></div></div></div>
+<div id="game" class="screen"><div class="game-wrap"><div class="hud"><div class="hud-left"><span class="hud-badge" id="hudRound">Round 1/5</span><span class="hud-badge" id="hudScore">Score: 0</span><span class="hud-badge" id="hudMode" style="display:none"></span><span class="hud-badge" id="hudPlayers" style="display:none">👥 1</span></div><div class="hud-right"><div class="timer-ring"><svg width="42" height="42"><circle class="bg" cx="21" cy="21" r="17"/><circle class="fg" cx="21" cy="21" r="17" stroke-dasharray="106.81" stroke-dashoffset="0"/></svg><div class="timer-text" id="timerText">60</div></div><button class="music-btn" id="btnMusic" title="Toggle music (M)">🔊</button></div></div><div class="health-bars" id="healthBars"></div><div class="streak-display" id="streakDisplay">🔥 <span id="streakCount">0</span></div><div class="map-area"><div class="map-instruction" id="mapInstruction"></div><div id="satMap"></div><div id="panoView"></div><div class="guess-map-container" id="guessMapContainer"><div class="expand-btn" id="expandGuess">⛶</div><div id="guessMap"></div><button class="submit-guess" id="btnSubmitGuess">✓ Submit Guess</button></div><div class="dropdown-panel" id="dropdownPanel"><div class="dd-group" id="ddContinent"><label>Continent</label><select id="selContinent"><option value="">—</option></select></div><div class="dd-group" id="ddCountry"><label>Country</label><select id="selCountry" disabled><option value="">—</option></select></div><div class="dd-group" id="ddProvince"><label>Province/State</label><select id="selProvince" disabled><option value="">—</option></select></div><div class="dd-group" id="ddCity"><label>City</label><select id="selCity" disabled><option value="">—</option></select></div><button class="dd-submit" id="btnSubmitDropdown">Submit ✓</button></div></div></div></div>
 <div id="results" class="screen"><div class="results-box"><h2 id="resultTitle">Round Complete!</h2><div class="result-map-wrap"><div id="resultMap"></div></div><div id="resultLocationInfo"></div><div class="result-stats" id="resultStats"></div><div id="resultPointsAnim"></div><div class="mini-podium" id="resultPodium"></div><div class="scoreboard" id="resultScoreboard"></div><div class="result-btns"><button class="btn-primary" id="btnNextRound">Next Round →</button><button class="btn-secondary" id="btnQuitGame" style="background:transparent;border:1px solid #555;color:var(--text-dim)">Quit</button></div></div></div>
 <div id="final" class="screen"><div class="final-box"><h2>🏆 Game Complete!</h2><div class="podium" id="podium"></div><div class="scoreboard" id="finalScoreboard"></div><div class="result-btns" style="margin-top:1em"><button class="btn-primary" id="btnPlayAgain">🔄 Play Again</button><button class="btn-secondary" id="btnBackMenu" style="background:transparent;border:1px solid #555;color:var(--text-dim)">🏠 Menu</button></div></div></div>
 <div id="gameOver" class="screen"><div class="gameover-box"><div class="skull-anim" id="goIcon">💀</div><h2 id="goTitle">Game Over!</h2><div class="final-streak" id="goScore">0</div><p id="goSub" style="color:var(--text-dim);margin:.6em 0"></p><div class="scoreboard" id="goScoreboard"></div><div class="result-btns" style="margin-top:1.2em"><button class="btn-primary" id="btnGoAgain">🔄 Play Again</button><button class="btn-secondary" id="btnGoMenu" style="background:transparent;border:1px solid #555;color:var(--text-dim)">🏠 Menu</button></div></div></div>
@@ -232,6 +259,7 @@ input,select{font-family:inherit;outline:none}
 <div class="confetti-container" id="confettiContainer"></div>
 <div id="countdownOverlay"><div class="countdown-num" id="countdownNum">3</div></div>
 <div id="hostToolbar"><button class="host-tool-btn" id="btnHostScores">📊 Scores</button><button class="host-tool-btn danger" id="btnHostReset">♻️ Reset</button></div>
+<div id="svOverlay"><div class="sv-card"><h3>🛰️ Street View</h3><p>By default the clue is a <strong>satellite image</strong>. Add a free Google Maps API key to play with an interactive <strong>Street View panorama</strong> — the real GeoGuessr feel.</p><ol><li>Open <a href="https://console.cloud.google.com/google/maps-apis/credentials" target="_blank" rel="noopener">Google Cloud → Maps Platform → Credentials</a> and create an API key.</li><li>Enable the <strong>Maps JavaScript API</strong> for the project.</li><li>(Recommended) Restrict the key to your site's domain.</li><li>Paste the key below. It is stored only in this browser.</li></ol><input id="svKeyInput" type="text" placeholder="Paste Google Maps API key…" autocomplete="off"/><label class="sv-toggle"><input type="checkbox" id="svEnableChk"/> Use Street View when a key is set</label><div class="sv-status off" id="svStatus"></div><div class="sv-actions"><button class="sv-cancel" id="svCancel">Cancel</button><button class="sv-save" id="svSave">Save</button></div></div></div>
 <div id="scoresOverlay"><div class="scores-card"><h3>🏆 Live Scores</h3><div class="sub">Host controls — visible to you only</div><div class="scoreboard" id="scoresOverlayBoard"></div><div class="scores-actions"><button class="btn-close-scores" id="btnScoresClose">Close</button><button class="btn-reset-scores" id="btnScoresReset">♻️ Reset all scores</button></div></div></div>
 
 <script>
@@ -515,6 +543,57 @@ function generateDropdownOptions(loc,pool){
 function generateCountryOptions(loc,pool){pool=pool||LOCATIONS;let all=[...new Set(pool.map(l=>l.country))].filter(c=>c!==loc.country);let opts=shuffle(all).slice(0,19);opts.push(loc.country);return shuffle(opts)}
 
 // ========== MAP HELPERS ==========
+// ========== STREET VIEW (optional, real-GeoGuessr clue) ==========
+function gmapsKey(){try{const q=new URLSearchParams(location.search).get('gmapsKey');if(q)return q.trim()}catch(e){}return (localStorage.getItem('azg_gmaps_key')||window.AZG_GMAPS_KEY||'').trim()}
+function streetViewEnabled(){return !G._svBroken&&!!gmapsKey()&&localStorage.getItem('azg_streetview')!=='off'}
+// Google calls this when the API key is invalid/unauthorized — revert to satellite for the session.
+window.gm_authFailure=function(){G._svBroken=true;try{if(G.currentLocation&&document.querySelector('#game.active'))fallbackToSat(G.currentLocation,G.difficulty)}catch(e){};const st=document.getElementById('svStatus');if(st){st.className='sv-status off';st.textContent='⚠️ That API key was rejected by Google — using satellite view.'}};
+function loadGoogleMaps(){
+  if(window.google&&google.maps&&google.maps.StreetViewPanorama)return Promise.resolve();
+  if(G._gmapsPromise)return G._gmapsPromise;
+  const key=gmapsKey();if(!key)return Promise.reject(new Error('no key'));
+  G._gmapsPromise=new Promise((resolve,reject)=>{
+    window.__azgGmapsReady=()=>resolve();
+    const s=document.createElement('script');
+    s.src='https://maps.googleapis.com/maps/api/js?key='+encodeURIComponent(key)+'&callback=__azgGmapsReady&loading=async';
+    s.async=true;s.onerror=()=>{G._gmapsPromise=null;reject(new Error('load failed'))};
+    document.head.appendChild(s);
+  });
+  return G._gmapsPromise;
+}
+function panoOptions(d){
+  const base={addressControl:false,showRoadLabels:false,fullscreenControl:false,motionTracking:false,motionTrackingControl:false,enableCloseButton:false,imageDateControl:false};
+  if(d==='nmpz')return Object.assign(base,{clickToGo:false,linksControl:false,panControl:false,zoomControl:false,scrollwheel:false,disableDoubleClickZoom:true});
+  if(d==='noMove')return Object.assign(base,{clickToGo:false,linksControl:false,panControl:true,zoomControl:true,scrollwheel:true});
+  return Object.assign(base,{clickToGo:true,linksControl:true,panControl:true,zoomControl:true,scrollwheel:true});
+}
+// Show the round clue: Street View panorama when enabled+available, otherwise the satellite image.
+function showClue(loc,difficulty){
+  if(streetViewEnabled()){document.getElementById('panoView').style.display='block';document.getElementById('satMap').style.display='none';initPano(loc,difficulty);}
+  else{fallbackToSat(loc,difficulty);}
+}
+function fallbackToSat(loc,difficulty){
+  const sat=document.getElementById('satMap'),pano=document.getElementById('panoView');
+  if(pano)pano.style.display='none';if(sat)sat.style.display='';
+  initSatMap();G.satMap.setView([loc.lat,loc.lng],difficulty==='nmpz'?14:13);setSatMapInteraction();
+  setTimeout(()=>{if(G.satMap)G.satMap.invalidateSize()},120);
+}
+function initPano(loc,difficulty){
+  if(G._panoReq==null)G._panoReq=0;
+  const reqId=++G._panoReq; // a newer round invalidates older async lookups
+  loadGoogleMaps().then(()=>{
+    if(reqId!==G._panoReq)return; // a newer round superseded this lookup
+    const div=document.getElementById('panoView');
+    if(!G._svService)G._svService=new google.maps.StreetViewService();
+    G._svService.getPanorama({location:{lat:loc.lat,lng:loc.lng},radius:50000,source:google.maps.StreetViewSource.OUTDOOR},(data,status)=>{
+      if(reqId!==G._panoReq)return;
+      if(status!=='OK'||!data||!data.location){fallbackToSat(loc,difficulty);return}
+      const opts=panoOptions(difficulty),heading=Math.floor(Math.random()*360);
+      if(!G.pano){G.pano=new google.maps.StreetViewPanorama(div,Object.assign({pano:data.location.pano,pov:{heading,pitch:0},visible:true},opts));}
+      else{G.pano.setOptions(opts);G.pano.setPano(data.location.pano);G.pano.setPov({heading,pitch:0});G.pano.setZoom(0);G.pano.setVisible(true);}
+    });
+  }).catch(()=>{if(reqId===G._panoReq)fallbackToSat(loc,difficulty)});
+}
 function initSatMap(){if(G.satMap){G.satMap.remove();G.satMap=null}G.satMap=L.map('satMap',{zoomControl:true,attributionControl:false});L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19}).addTo(G.satMap)}
 function initGuessMap(){if(G.guessMap){G.guessMap.remove();G.guessMap=null}G.guessMap=L.map('guessMap',{zoomControl:true,attributionControl:false}).setView([20,0],2);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(G.guessMap);G.guessMarker=null;G.guessMap.on('click',e=>{if(G.hasGuessed||!G.roundActive)return;if(G.guessMarker)G.guessMap.removeLayer(G.guessMarker);G.guessMarker=L.marker(e.latlng,{draggable:true}).addTo(G.guessMap);document.getElementById('btnSubmitGuess').classList.add('visible')})}
 function initResultMap(){if(G.resultMap){G.resultMap.remove();G.resultMap=null}G.resultMap=L.map('resultMap',{zoomControl:true,attributionControl:false}).setView([20,0],2);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(G.resultMap)}
@@ -572,7 +651,7 @@ function showInstructions(soloMode){
   audio.stopMusic();showScreen('instructions');updateHostToolbar();
   const dropdown=(G.mode==='progressive'||G.mode==='streaks');
   document.getElementById('instrTitle').textContent='How to Play — '+(G.mode?G.mode.charAt(0).toUpperCase()+G.mode.slice(1):'')+' 🌍';
-  const s=[['🛰️','Study the <strong>satellite image</strong> filling the main view. Look for road signs, architecture, vegetation and coastlines.']];
+  const s=[['🛰️',(streetViewEnabled()?'Explore the <strong>Street View panorama</strong> filling the main view — drag to look around. ':'Study the <strong>satellite image</strong> filling the main view. ')+'Look for road signs, architecture, vegetation and coastlines.']];
   if(dropdown){s.push(['🧭','Use the <strong>dropdowns</strong> to pick Continent → Country'+(G.mode==='progressive'?' → Province → City':'')+'. Each correct step unlocks the next.']);}
   else{s.push(['📍','Click the <strong>guessing map</strong> (bottom-right) to drop your pin where you think it is. Drag the pin to fine-tune.']);s.push(['✓','Press <strong>Submit Guess</strong> (or Enter) to lock it in before the timer ends.']);}
   if(!soloMode)s.push(['👥','Everyone plays the <strong>same round at the same time</strong>. When the timer ends, you all see the results together.']);
@@ -625,7 +704,7 @@ function playRound(){
   if(G.mode==='streaks'){sd.classList.add('visible');document.getElementById('streakCount').textContent=G.streak}else sd.classList.remove('visible');
   renderHealthBars();
   G.difficulty=effectiveDiff;if(effectiveMode==='nmpz')G.difficulty='nmpz';
-  initSatMap();G.satMap.setView([G.currentLocation.lat,G.currentLocation.lng],G.difficulty==='nmpz'?14:13);setSatMapInteraction();
+  showClue(G.currentLocation,G.difficulty);
   updateMapInstruction(useDropdown,G.mode);
   if(useMapPin){initGuessMap();document.getElementById('guessMapContainer').classList.remove('expanded')}
   if(useDropdown){setupDropdowns(effectiveMode)}
@@ -645,7 +724,7 @@ function closeDropdownUI(){
 function updateMapInstruction(useDropdown,mode){
   const el=document.getElementById('mapInstruction');if(!el)return;
   let t;
-  if(useDropdown)t='🧭 <strong>Identify the place</strong> from the satellite view, then pick Continent → Country'+(mode==='progressive'?' → Province → City':'')+' in the panel below. Fast correct answers score more.';
+  if(useDropdown)t='🧭 <strong>Identify the place</strong> from the view, then pick Continent → Country'+(mode==='progressive'?' → Province → City':'')+' in the panel below. Fast correct answers score more.';
   else if(mode==='explorer')t='🧭 <strong>Explore</strong> — no timer. Drop a pin on the world map (bottom-right) when ready.';
   else t='📍 <strong>Drop a pin</strong> on the world map (bottom-right) where you think this is, then <strong>Submit</strong>. Closer + faster = more points.';
   el.innerHTML=t;el.classList.remove('faded');
@@ -1001,6 +1080,31 @@ document.getElementById('btnHost').onclick=()=>hostGame();
 document.getElementById('btnJoin').onclick=()=>{const ri=document.getElementById('joinRoomInput');ri.classList.toggle('show');if(ri.classList.contains('show'))document.getElementById('roomCodeInput').focus()};
 document.getElementById('btnJoinRoom').onclick=()=>{const code=document.getElementById('roomCodeInput').value.trim();if(code.length===4)joinGame(code)};
 document.getElementById('btnSolo').onclick=()=>{G.playerName=document.getElementById('nameInput').value.trim()||'Player';G.playerIcon=pickIcon();G.solo=true;G.isHost=true;G.playerId='solo';showScreen('modeSelect')};
+// ---- Street View settings ----
+function updateSvDot(){const d=document.getElementById('svDot');if(d)d.classList.toggle('on',streetViewEnabled());const b=document.getElementById('btnSvSettings');if(b)b.lastChild.textContent=streetViewEnabled()?'Street View: ON':'Street View setup'}
+function openSvSettings(){
+  document.getElementById('svKeyInput').value=localStorage.getItem('azg_gmaps_key')||'';
+  document.getElementById('svEnableChk').checked=localStorage.getItem('azg_streetview')!=='off';
+  const st=document.getElementById('svStatus');
+  if(streetViewEnabled()){st.className='sv-status ok';st.textContent='✓ Street View is active'}
+  else if(gmapsKey()){st.className='sv-status off';st.textContent='Key saved — Street View is turned off'}
+  else{st.className='sv-status off';st.textContent='No key yet — using satellite view'}
+  document.getElementById('svOverlay').classList.add('show');
+  setTimeout(()=>document.getElementById('svKeyInput').focus(),50);
+}
+function closeSvSettings(){document.getElementById('svOverlay').classList.remove('show')}
+function saveSvSettings(){
+  const key=document.getElementById('svKeyInput').value.trim();
+  if(key)localStorage.setItem('azg_gmaps_key',key);else localStorage.removeItem('azg_gmaps_key');
+  localStorage.setItem('azg_streetview',document.getElementById('svEnableChk').checked?'on':'off');
+  G._gmapsPromise=null;G._svBroken=false; // allow reload with the new key
+  closeSvSettings();updateSvDot();
+}
+document.getElementById('btnSvSettings').onclick=()=>openSvSettings();
+document.getElementById('svCancel').onclick=()=>closeSvSettings();
+document.getElementById('svSave').onclick=()=>saveSvSettings();
+document.getElementById('svOverlay').onclick=(e)=>{if(e.target.id==='svOverlay')closeSvSettings()};
+updateSvDot();
 document.getElementById('btnBackWelcome').onclick=()=>{mpCleanup();showScreen('welcome')};
 document.querySelectorAll('.mode-card').forEach(card=>{card.onclick=()=>{G.mode=card.dataset.mode;G.region=document.getElementById('regionFilter').value;G.difficulty=document.getElementById('difficultyFilter').value;G.numRounds=parseInt(document.getElementById('roundsFilter').value)||0;if(G.solo){startGame()}else{db.collection('rooms').doc(G.roomId).update({mode:G.mode,region:G.region,difficulty:G.difficulty,phase:'lobby'});showLobby()}}});
 document.getElementById('btnStartGame').onclick=()=>{if(!G.isHost||!G.mode)return;hostStartGame()};
